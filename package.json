@@ -1,0 +1,9 @@
+{
+  "name": "play-request",
+  "version": "1.0.0",
+  "description": "Press Play Request",
+  "main": "index.js",
+  "repository": "https://github.com/codeday-labs/play-request",
+  "author": "Nayeon Shin<dev.nayeon.shin@gmail.com>",
+  "license": "MIT"
+}
