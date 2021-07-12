@@ -18,18 +18,18 @@ of the project depend on others?
 
 ## Prerequisites
 
-Homebrew (Mac users) https://brew.sh/
-npm (Window users) https://www.npmjs.com/get-npm
-Yarn & Node
-Mac: <code>$ brew install yarn</code>
-Windows: <code>$ npm install --global yarn</code>
-Check that you have installed them:
-<code>$ yarn --version</code>
+Homebrew (Mac users) https://brew.sh/  
+npm (Window users) https://www.npmjs.com/get-npm  
+Yarn & Node  
+Mac: <code>$ brew install yarn</code>  
+Windows: <code>$ npm install --global yarn</code>  
+Check that you have installed them:  
+<code>$ yarn --version</code>  
 <code>$ node --version</code>
 
 ### Backend
 
-<code>$ yarn global add nodemon</code>
+<code>$ yarn global add nodemon</code>  
 <code>$ yarn add babel-node --dev</code>
 
 ## How to run the server
