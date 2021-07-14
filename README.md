@@ -36,6 +36,7 @@ Check that you have installed them:
 
 1. <code>yarn start</code>
 2. Go to http://localhost:4000/
+3. Then, you'll see the graphql playground, where you can test the DB.
 
 ### Firebase
 
