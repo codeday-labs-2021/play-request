@@ -41,6 +41,8 @@ build/Release
 node_modules/
 jspm_packages/
 
+.expo/
+
 # TypeScript v1 declaration files
 typings/
 
@@ -102,3 +104,11 @@ dist
 
 # TernJS port file
 .tern-port
+
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
