@@ -32,9 +32,6 @@ Check that you have installed them:
 To run:
 ```bash
 cd client
-```
-
-```bash
 yarn start
 ```
 
