@@ -27,16 +27,17 @@ Check that you have installed them:
 <code>$ yarn --version</code>  
 <code>$ node --version</code>
 
-### Backend
+### Frontend - ReactJS
 
-<code>$ yarn global add nodemon</code>  
-<code>$ yarn add babel-node --dev</code>
+To run:
+```bash
+cd client
+yarn start
+```
 
-## How to run the server
+### Backend - Express
 
-1. <code>yarn start</code>
-2. Go to http://localhost:4000/
-3. Then, you'll see the graphql playground, where you can test the DB.
+*todo*
 
 ### Firebase
 
