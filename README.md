@@ -46,7 +46,7 @@ $ npm i
 $ npm run dev
 ```
 
-If you see a nodemon error in the console, run `$ npm nodemon`.
+If you see a nodemon error in the console, run `$ npm i nodemon`.
 
 2. Go to http://localhost:4000/
 
