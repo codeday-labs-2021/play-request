@@ -15,7 +15,14 @@ var firebaseConfig = {
 };
 
 var fireApp = firebase.initializeApp(firebaseConfig);
-console.log("Firebase Initialized");
+var database = firebase.database();
+console.log(`Firebase Initialized: ${firebase.app().name}`);
+
+// firebase.database().ref('users/' + "roban0239").set({
+//     username: "solace",
+//     email: "bansalrohan18@gmail.com",
+//     profile_picture : "https://rbansal.dev/profile.png"
+// });
 
 
 var router = express.Router();
