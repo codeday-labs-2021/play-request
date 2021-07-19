@@ -1,9 +1,21 @@
 var express = require('express');
-var firebase = require('firebase/app');
-require('firebase/auth');
-require('firebase/database');
-require('firebase/storage');
-require('firebase/messaging');
+var firebase = require('firebase');
+
+require('dotenv').config()
+
+
+var firebaseConfig = {
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: "pressplayrequest.firebaseapp.com",
+    databaseURL: "https://pressplayrequest-default-rtdb.firebaseio.com",
+    projectId: "pressplayrequest",
+    storageBucket: "pressplayrequest.appspot.com",
+    messagingSenderId: "301326175981",
+    appId: "1:301326175981:web:1096567c401fb20feb06e4"
+};
+
+var fireApp = firebase.initializeApp(firebaseConfig);
+console.log("Firebase Initialized");
 
 
 var router = express.Router();
@@ -139,4 +151,5 @@ router.patch('/project/:projectId/messages/:messageId/', (req, res) => {
     return res.send(`PATCH Project Message - Project ID: ${req.params.projectId}, Message ID: ${req.params.messageId}`);
 });
 
+console.log("API Initialized");
 module.exports = router;
