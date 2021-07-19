@@ -39,9 +39,16 @@ yarn start
 
 ### Backend - Express
 
-1. Run `$ npm i` to create `node_modules`
-2. Run `$ npm run dev`
-3. Go to http://localhost:4000/
+1. Run:
+
+```
+$ npm i
+$ npm run dev
+```
+
+If you see a nodemon error in the console, run `$ npm nodemon`.
+
+2. Go to http://localhost:4000/
 
 ### Firebase
 
