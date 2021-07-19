@@ -1,0 +1,28 @@
+{
+  "name": "play-request",
+  "version": "1.0.0",
+  "description": "## User Requirements",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codeday-labs/play-request.git"
+  },
+  "author": "Nayeon Shin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codeday-labs/play-request/issues"
+  },
+  "homepage": "https://github.com/codeday-labs/play-request#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/node": "^7.14.7",
+    "@babel/preset-env": "^7.14.7"
+  }
+}

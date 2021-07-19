@@ -26,10 +26,12 @@ Windows: <code>$ npm install --global yarn</code>
 Check that you have installed them:  
 <code>$ yarn --version</code>  
 <code>$ node --version</code>
+REQUIRED: Node version >= 14.15.2
 
 ### Frontend - ReactJS
 
 To run:
+
 ```bash
 cd client
 yarn start
@@ -37,7 +39,16 @@ yarn start
 
 ### Backend - Express
 
-*todo*
+1. Run:
+
+```
+$ npm i
+$ npm run dev
+```
+
+If you see a nodemon error in the console, run `$ npm nodemon`.
+
+2. Go to http://localhost:4000/
 
 ### Firebase
 
