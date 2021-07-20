@@ -1,3 +1,6 @@
+class Sample {
+}
+
 class TrackData {
     synthdata;
 

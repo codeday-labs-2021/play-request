@@ -19,13 +19,15 @@ router.post('/projects/', (req, res) => {
     data.database.ref('projects/' + id).set(JSON.parse(JSON.stringify(project)));
     var response = {
         "projectId": id,
-    }
+    };
     return res.send(response);
 });
 
 router.get('/projects/', (req, res) => {
     var projectsRef = data.database.ref('projects');
-    var response = `Nothing Here`;
+    var response = {
+        "text": "No Data"
+    };
     projectsRef.on('value', (snapshot) => {
         response = snapshot.val();
         return res.send(response);
