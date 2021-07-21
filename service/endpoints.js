@@ -4,6 +4,9 @@ var express = require('express');
 var data = require('./database');
 const schema = require("./schema");
 global.XMLHttpRequest = require("xhr2");
+const multer  = require('multer')
+const upload = multer();
+const fs = require('fs');
 
 
 var router = express.Router();
@@ -124,8 +127,17 @@ router.get('/project/:projectId/samples/', async (req, res) => {
     });
 });
 
-router.post('/project/:projectId/samples/', (req, res) => {
-    return res.send(`POST Create Project Sample: ${req.params.projectId}`);
+/*
+client side headers:
+headers: new Headers({
+    'enctype': 'multipart/form-data' // the enctype is important to work with multer on the server
+})
+*/
+router.post('/project/:projectId/samples/', upload.single("sample"), (req, res) => {
+    let uploadLocation = __dirname + "/uploadtest/file.mp3";
+    fs.writeFileSync(uploadLocation, Buffer.from(new Uint8Array(req.file.buffer)));
+    res.sendStatus(200);
+    // return res.send(`POST Create Project Sample: ${req.params.projectId}`);
 });
 
 router.get('/project/:projectId/samples/:sampleId/', (req, res) => {
@@ -142,7 +154,7 @@ router.delete('/project/:projectId/samples/:sampleId/', (req, res) => {
 
 // SOUND EFFECTS --------------------------------------------
 
-router.get('/effects/', (req, res) => {
+router.get('/effects/', async (req, res) => {
     var effectRef = data.storage.ref().child('effects').child('universal');
     var effects = [];
     await effectRef.listAll().then((resp) => {
@@ -160,7 +172,7 @@ router.get('/effects/', (req, res) => {
     });
 });
 
-router.get('/project/:projectId/effects/', (req, res) => {
+router.get('/project/:projectId/effects/', async (req, res) => {
     var effectRef = data.storage.ref().child('effects').child(req.params.projectId);
     var effects = [];
     await effectRef.listAll().then((resp) => {
@@ -178,6 +190,12 @@ router.get('/project/:projectId/effects/', (req, res) => {
     });
 });
 
+/*
+client side headers:
+headers: new Headers({
+    'enctype': 'multipart/form-data' // the enctype is important to work with multer on the server
+})
+*/
 router.post('/project/:projectId/effects/', (req, res) => {
     return res.send(`POST Create Project Effects: ${req.params.projectId}`);
 });
