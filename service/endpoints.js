@@ -11,15 +11,14 @@ router.use(function timeLog(req, res, next) {
     next();
 });
 
-// function verifyNull(snapshot, resHandler, response) {    
-//     if(snapshot.val() === null) {
-//         response['text'] = "No Data";
-//         return resHandler.send(response);
-//     } else {
-//         response = snapshot.val();
-//         return resHandler.send(response);
-//     }
-// }
+function verifyNull(snapshot, resHandler) {    
+    if(snapshot.val() === null) {
+        return resHandler.send(schema.RequestError(404, "no data available"));
+    } else {
+        var response = snapshot.val();
+        return resHandler.send(response);
+    }
+}
 
 // PROJECTS ----------------------------------------------
 
@@ -30,63 +29,59 @@ router.post('/projects/', (req, res) => {
     var response = {
         "projectId": id,
     };
-    return res.send(response);
+    return res.send(schema.RequestSuccess(201, "project created successfully", response));
 });
 
 router.get('/projects/', (req, res) => {
     var projectsRef = data.database.ref('projects');
-    var response = {};
     projectsRef.once('value', (snapshot) => {
-        if(snapshot.val() === null) {
-            response['text'] = "No Data";
-            return res.send(response);
-        } else {
-            response = snapshot.val();
-            return res.send(response);
-        }
+        return verifyNull(snapshot, res);
     });
 });
 
 router.get('/project/:projectId', (req, res) => {
     var projectsRef = data.database.ref(`projects/${req.params.projectId}`);
-    var response = {};
     projectsRef.once('value', (snapshot) => {
-        if(snapshot.val() === null) {
-            response['text'] = "No Data";
-            return res.send(response);
-        } else {
-            response = snapshot.val();
-            return res.send(response);
-        }
+        return verifyNull(snapshot, res);
     });
 });
 
 router.delete('/project/:projectId', (req, res) => {
     var projectsRef = data.database.ref(`projects/${req.params.projectId}`);
-    var response = {};
     projectsRef.once('value', (snapshot) => {
         if(snapshot.val() === null) {
-            response['text'] = "Delete Failed: Does Not Exist"
-            res.send(response);
+            res.send(schema.RequestError(404, "delete failed: project with provided id does not exist"));
         } else {
             projectsRef.remove().then(function() {
-                response['text'] = "Delete Success"
-                res.send(response);
+                res.send(schema.RequestSuccess(200, "deleted successfully"));
             })
         }
     });        
 });
 
 router.get('/project/:projectId/contributors/', (req, res) => {
-    return res.send(`GET Project Contributors: ${req.params.projectId}`);
+    var ref = data.database.ref(`projects/${req.params.projectId}/contributors/`);
+    ref.once('value', (snapshot) => {
+        return verifyNull(snapshot, res);
+    });
 });
 
 router.post('/project/:projectId/track/', (req, res) => {
-    return res.send(`POST Project Track: ${req.params.projectId}`);
+    var track = new schema.TrackData(req.body);
+    data.database.ref(`projects/${req.params.projectId}/trackdata`).set(JSON.parse(JSON.stringify(track)));
+    var response = {
+        "projectId": req.params.projectId,
+    };
+    return res.send(schema.RequestSuccess(200, "track updated successfully", response));
 });
 
 router.patch('/project/:projectId/', (req, res) => {
-    return res.send(`PATCH Project ID: ${req.params.projectId}`);
+    var project = new schema.Project(req.body);
+    data.database.ref(`projects/${req.params.projectId}`).set(JSON.parse(JSON.stringify(project)));
+    var response = {
+        "projectId": req.params.projectId,
+    };
+    return res.send(schema.RequestSuccess(200, "project patched successfully", response));
 });
 
 // PLAY REQUESTS ------------------------------------------
@@ -188,6 +183,14 @@ router.delete('/project/:projectId/messages/:messageId/', (req, res) => {
 router.patch('/project/:projectId/messages/:messageId/', (req, res) => {
     return res.send(`PATCH Project Message - Project ID: ${req.params.projectId}, Message ID: ${req.params.messageId}`);
 });
+
+// WILDCARD ---------------------------------------------------
+
+router.get('*', function(req, res) {
+    res.send("Malformed Endpoint");
+});
+
+// ------------------------------------------------------------
 
 console.log("REST API Initialized");
 module.exports = router;

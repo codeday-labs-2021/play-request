@@ -1,39 +1,26 @@
 /* TEST JSON FOR PROJECT
 {
-	"name" : "Awesome Beat",
-	"description" : "a super cool song!",
-	"contributors": ["name", "name2", "name3"],
-	"trackdata" : {
-		"originalSongRef": "original_song_files/beat1.mp3",
+	"name": "Awesome Beat",
+	"description": "a super cool song!",
+	"contributors": [
+		"name",
+		"name2",
+		"name3"
+	],
+	"trackdata": {
+		"songref": "original_song_files/beat1.mp3",
 		"sampledata": [
 			{
-				"startTimestamp": "0:50",
-				"id": "test",
-				"ugen": "flock.ugen.sinOsc",
-				"rate": "audio",
-				"inputs": {
-					"freq": 440
-				},
-				"options": {
-					"interpolation": "linear"
-				}
+				"timestamp": "0:50",
+				"length": "0:20",
+				"name": "test",
+				"ref": "samples/sample1.mp3"
 			},
 			{
-				"startTimestamp": "0:10",
-				"ugen": "flock.ugen.scope",
-				"source": {
-					"id": "player",
-					"ugen": "flock.ugen.playBuffer",
-					"speed": 1.0,
-					"loop": 1.0
-				},
-				"options": {
-					"canvas": "#waveform",
-					"styles": {
-						"strokeColor": "#888",
-						"strokeWidth": 1
-					}
-				}
+				"timestamp": "0:20",
+				"length": "0:30",
+				"name": "test 2",
+				"ref": "samples/sample2.mp3"
 			}
 		]
 	}
@@ -49,7 +36,7 @@ class Sample {
     constructor(data) {
 		this.timestamp = data.timestamp;
 		this.length = data.length;
-		this.name = data.length;
+		this.name = data.name;
 		this.ref = data.ref;
     }
 }
@@ -81,6 +68,27 @@ class Project {
     }
 }
 
+function RequestError(statusCode, description) {
+	return {
+		"text": "error",
+		"statusCode": statusCode,
+		"description": description
+	}
+}
+
+function RequestSuccess(statusCode, description, args=null) {
+	var msg = {
+		"text": "success",
+		"statusCode": statusCode,
+		"description": description
+	}
+	if(args !== null) {
+		msg['details'] = args;
+	}
+
+	return msg;
+}
+
 module.exports = {
-    Project
+    Project, TrackData, Sample, RequestError, RequestSuccess
 }
