@@ -1,23 +1,8 @@
+import { v4 as uuidv4 } from 'uuid';
+
 var express = require('express');
-var firebase = require('firebase');
-
-require('dotenv').config()
-
-
-var firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: "pressplayrequest.firebaseapp.com",
-    databaseURL: "https://pressplayrequest-default-rtdb.firebaseio.com",
-    projectId: "pressplayrequest",
-    storageBucket: "pressplayrequest.appspot.com",
-    messagingSenderId: "301326175981",
-    appId: "1:301326175981:web:1096567c401fb20feb06e4"
-};
-
-var fireApp = firebase.initializeApp(firebaseConfig);
-var database = firebase.database();
-console.log(`Firebase Initialized: ${firebase.app().name}`);
-
+var data = require('./database');
+const { Project } = require("./schema");
 
 var router = express.Router();
 
@@ -28,8 +13,25 @@ router.use(function timeLog(req, res, next) {
 
 // PROJECTS ----------------------------------------------
 
-router.post('/project/new/', (req, res) => {
-    return res.send(`POST New Project`);
+router.post('/projects/', (req, res) => {
+    const id = uuidv4();
+    var project = new Project(req.body);
+    data.database.ref('projects/' + id).set(JSON.parse(JSON.stringify(project)));
+    var response = {
+        "projectId": id,
+    };
+    return res.send(response);
+});
+
+router.get('/projects/', (req, res) => {
+    var projectsRef = data.database.ref('projects');
+    var response = {
+        "text": "No Data"
+    };
+    projectsRef.on('value', (snapshot) => {
+        response = snapshot.val();
+        return res.send(response);
+    });
 });
 
 router.get('/project/:projectId', (req, res) => {
@@ -59,15 +61,15 @@ router.post('/project/:projectId/request/', (req, res) => {
 });
 
 router.get('/project/:projectId/request/', (req, res) => {
-    return res.send(`GET Project Request: ${req.params.projectId}`);
+    return res.send(`GET All Play Requests: ${req.params.projectId}`);
 });
 
 router.delete('/project/:projectId/request/:requestId/', (req, res) => {
     return res.send(`DEL Project ID: ${req.params.projectId}, Request ID: ${req.params.requestId}`);
 });
 
-router.post('/project/:projectId/request/:requestId/routerrove/', (req, res) => {
-    return res.send(`POST routerrove Request - Project ID: ${req.params.projectId}, Request ID: ${req.params.requestId}`);
+router.post('/project/:projectId/request/:requestId/approve/', (req, res) => {
+    return res.send(`POST Approve Request - Project ID: ${req.params.projectId}, Request ID: ${req.params.requestId}`);
 });
 
 router.post('/project/:projectId/request/:requestId/deny/', (req, res) => {
@@ -152,5 +154,5 @@ router.patch('/project/:projectId/messages/:messageId/', (req, res) => {
     return res.send(`PATCH Project Message - Project ID: ${req.params.projectId}, Message ID: ${req.params.messageId}`);
 });
 
-console.log("API Initialized");
+console.log("REST API Initialized");
 module.exports = router;
