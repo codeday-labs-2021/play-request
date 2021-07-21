@@ -1,4 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
+import { uploadBytes } from "firebase/storage";
+
 
 var express = require('express');
 var data = require('./database');
@@ -134,9 +136,19 @@ headers: new Headers({
 })
 */
 router.post('/project/:projectId/samples/', upload.single("sample"), (req, res) => {
-    let uploadLocation = __dirname + "/uploadtest/file.mp3";
-    fs.writeFileSync(uploadLocation, Buffer.from(new Uint8Array(req.file.buffer)));
-    res.sendStatus(200);
+    // let uploadLocation = __dirname + "/uploadtest/file.mp3";
+    // fs.writeFileSync(uploadLocation, Buffer.from(new Uint8Array(req.file.buffer)));
+    // console.log(req.file);
+    var ref = data.storage.ref().child("samples").child(req.params.projectId).child(req.file.originalname);
+    ref.put(new Uint8Array(req.file.buffer)).then((snapshot) => {
+        var metadata = {
+            contentType: "audio/mpeg"
+        }
+        ref.updateMetadata(metadata).then((metadata) => {
+            return res.send(schema.RequestSuccess(200, "sample saved successfully"));
+        });
+    });
+
     // return res.send(`POST Create Project Sample: ${req.params.projectId}`);
 });
 
