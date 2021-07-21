@@ -103,15 +103,25 @@ router.get('/samples/', async (req, res) => {
                 return res.send(samples);
             });
         });
-
     });
-    
-    
-    
 });
 
-router.get('/project/:projectId/samples/', (req, res) => {
-    return res.send(`GET Project Samples: ${req.params.projectId}`);
+router.get('/project/:projectId/samples/', async (req, res) => {
+    var sampleRef = data.storage.ref().child('samples').child(req.params.projectId);
+    var samples = [];
+    await sampleRef.listAll().then((resp) => {
+        resp.items.forEach(async function(ref) {
+            await ref.getDownloadURL().then((url) => {
+                var sp = {
+                    fullpath: ref.fullPath,
+                    downloadurl: url
+                }
+                samples.push(sp);
+            }).then(() => {
+                return res.send(samples);
+            });
+        });
+    });
 });
 
 router.post('/project/:projectId/samples/', (req, res) => {
@@ -133,11 +143,39 @@ router.delete('/project/:projectId/samples/:sampleId/', (req, res) => {
 // SOUND EFFECTS --------------------------------------------
 
 router.get('/effects/', (req, res) => {
-    return res.send(`GET Universally Available Effects`);
+    var effectRef = data.storage.ref().child('effects').child('universal');
+    var effects = [];
+    await effectRef.listAll().then((resp) => {
+        resp.items.forEach(async function(ref) {
+            await ref.getDownloadURL().then((url) => {
+                var ef = {
+                    fullpath: ref.fullPath,
+                    downloadurl: url
+                }
+                effects.push(ef);
+            }).then(() => {
+                return res.send(effects);
+            });
+        });
+    });
 });
 
 router.get('/project/:projectId/effects/', (req, res) => {
-    return res.send(`GET Project Effects: ${req.params.projectId}`);
+    var effectRef = data.storage.ref().child('effects').child(req.params.projectId);
+    var effects = [];
+    await effectRef.listAll().then((resp) => {
+        resp.items.forEach(async function(ref) {
+            await ref.getDownloadURL().then((url) => {
+                var ef = {
+                    fullpath: ref.fullPath,
+                    downloadurl: url
+                }
+                effects.push(ef);
+            }).then(() => {
+                return res.send(effects);
+            });
+        });
+    });
 });
 
 router.post('/project/:projectId/effects/', (req, res) => {
