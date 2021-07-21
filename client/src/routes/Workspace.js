@@ -1,7 +1,44 @@
 import React from "react";
+import Chatroom from "../components/Chatroom";
+import Samples from "../components/Samples";
+import "./Workspace.css";
+
+function Instruments() {
+  return <span>Instruments</span>;
+}
+
+function SoundEffects() {
+  return <span>Sound effects</span>;
+}
+
+function MainWorkspace() {
+  return <span>Main workspace</span>;
+}
 
 function Workspace() {
-  return <h1>This is a Workspace page</h1>;
+  return (
+    <div className="wrapper">
+      <div className="column">
+        <div className="column__chatroom">
+          <Chatroom />
+        </div>
+        <div className="column__instrument">
+          <Instruments />
+        </div>
+      </div>
+      <div className="column">
+        <MainWorkspace />
+      </div>
+      <div className="column">
+        <div className="column_samples">
+          <Samples />
+        </div>
+        <div className="column_soundeffects">
+          <SoundEffects />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Workspace;
