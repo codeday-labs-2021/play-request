@@ -34,7 +34,7 @@ To run:
 
 ```bash
 cd client
-yarn start
+npm start
 ```
 
 ### Backend - Express
