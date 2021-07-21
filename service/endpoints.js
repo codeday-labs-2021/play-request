@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 var express = require('express');
 var data = require('./database');
 const schema = require("./schema");
+global.XMLHttpRequest = require("xhr2");
+
 
 var router = express.Router();
 
@@ -84,36 +86,28 @@ router.patch('/project/:projectId/', (req, res) => {
     return res.send(schema.RequestSuccess(200, "project patched successfully", response));
 });
 
-// PLAY REQUESTS ------------------------------------------
-
-router.post('/project/:projectId/request/', (req, res) => {
-    return res.send(`POST Play Request: ${req.params.projectId}`);
-});
-
-router.get('/project/:projectId/request/', (req, res) => {
-    return res.send(`GET All Play Requests: ${req.params.projectId}`);
-});
-
-router.delete('/project/:projectId/request/:requestId/', (req, res) => {
-    return res.send(`DEL Project ID: ${req.params.projectId}, Request ID: ${req.params.requestId}`);
-});
-
-router.post('/project/:projectId/request/:requestId/approve/', (req, res) => {
-    return res.send(`POST Approve Request - Project ID: ${req.params.projectId}, Request ID: ${req.params.requestId}`);
-});
-
-router.post('/project/:projectId/request/:requestId/deny/', (req, res) => {
-    return res.send(`POST Deny Request - Project ID: ${req.params.projectId}, Request ID: ${req.params.requestId}`);
-});
-
-router.post('/project/:projectId/request/:requestId/change/', (req, res) => {
-    return res.send(`POST Change Request - Project ID: ${req.params.projectId}, Request ID: ${req.params.requestId}`);
-});
-
 // SAMPLES -------------------------------------------------
 
-router.get('/samples/', (req, res) => {
-    return res.send(`GET Universally Available Samples`);
+router.get('/samples/', async (req, res) => {
+    var sampleRef = data.storage.ref().child('samples').child('universal');
+    var samples = [];
+    await sampleRef.listAll().then((resp) => {
+        resp.items.forEach(async function(ref) {
+            await ref.getDownloadURL().then((url) => {
+                var sp = {
+                    fullpath: ref.fullPath,
+                    downloadurl: url
+                }
+                samples.push(sp);
+            }).then(() => {
+                return res.send(samples);
+            });
+        });
+
+    });
+    
+    
+    
 });
 
 router.get('/project/:projectId/samples/', (req, res) => {
@@ -160,6 +154,32 @@ router.patch('/project/:projectId/effects/:effectId/', (req, res) => {
 
 router.delete('/project/:projectId/effects/:effectId/', (req, res) => {
     return res.send(`DEL Project Effect - Project ID: ${req.params.projectId}, Effect ID: ${req.params.effectId}`);
+});
+
+// PLAY REQUESTS ------------------------------------------
+
+router.post('/project/:projectId/request/', (req, res) => {
+    return res.send(`POST Play Request: ${req.params.projectId}`);
+});
+
+router.get('/project/:projectId/request/', (req, res) => {
+    return res.send(`GET All Play Requests: ${req.params.projectId}`);
+});
+
+router.delete('/project/:projectId/request/:requestId/', (req, res) => {
+    return res.send(`DEL Project ID: ${req.params.projectId}, Request ID: ${req.params.requestId}`);
+});
+
+router.post('/project/:projectId/request/:requestId/approve/', (req, res) => {
+    return res.send(`POST Approve Request - Project ID: ${req.params.projectId}, Request ID: ${req.params.requestId}`);
+});
+
+router.post('/project/:projectId/request/:requestId/deny/', (req, res) => {
+    return res.send(`POST Deny Request - Project ID: ${req.params.projectId}, Request ID: ${req.params.requestId}`);
+});
+
+router.post('/project/:projectId/request/:requestId/change/', (req, res) => {
+    return res.send(`POST Change Request - Project ID: ${req.params.projectId}, Request ID: ${req.params.requestId}`);
 });
 
 // MESSAGING ---------------------------------------------------
