@@ -41,31 +41,25 @@
 */
 
 class Sample {
-    startTimestamp;
-    id;
-    ugen;
-    rate;
-    inputs;
-    source;
-    options;
+    timestamp;
+    length;
+    name;
+	ref;
 
     constructor(data) {
-        this.startTimestamp = data.startTimestamp;
-        this.id = data.id;
-        this.ugen = data.ugen;
-        this.rate = data.rate;
-        this.inputs = data.inputs;
-        this.source = data.source;
-        this.options = data.options;
+		this.timestamp = data.timestamp;
+		this.length = data.length;
+		this.name = data.length;
+		this.ref = data.ref;
     }
 }
 
 class TrackData {
-    originalSongRef;
+    songref;
     sampledata;
 
     constructor(data) {
-        this.originalSongRef = data.originalSongRef;
+        this.songref = data.songref;
         this.sampledata = [];
         for(var i = 0; i < data.sampledata.length; i++) {
             this.sampledata.push(new Sample(data.sampledata[i]));
@@ -90,36 +84,3 @@ class Project {
 module.exports = {
     Project
 }
-
-
-
-
-// var schema = require('js-schema');
-// var flocking = require('flocking');
-
-// var Synth = schema({
-//     id: Number,
-//     frequency : Number,
-//     oscillator : String,
-// });
-
-
-// class Sample {
-//     // id
-//     // length in seconds
-//     // volume
-//     // music data (bytes)
-// }
-
-// class Track {
-//     // list of Sample objects, with corresponding timestamps
-// }
-
-
-// // // LATER
-// // class History {
-// // }
-
-// // class PlayRequest {
-// // }
-

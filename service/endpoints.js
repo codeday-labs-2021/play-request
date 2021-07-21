@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 var express = require('express');
 var data = require('./database');
-const { Project } = require("./schema");
+const schema = require("./schema");
 
 var router = express.Router();
 
@@ -11,11 +11,21 @@ router.use(function timeLog(req, res, next) {
     next();
 });
 
+// function verifyNull(snapshot, resHandler, response) {    
+//     if(snapshot.val() === null) {
+//         response['text'] = "No Data";
+//         return resHandler.send(response);
+//     } else {
+//         response = snapshot.val();
+//         return resHandler.send(response);
+//     }
+// }
+
 // PROJECTS ----------------------------------------------
 
 router.post('/projects/', (req, res) => {
     const id = uuidv4();
-    var project = new Project(req.body);
+    var project = new schema.Project(req.body);
     data.database.ref('projects/' + id).set(JSON.parse(JSON.stringify(project)));
     var response = {
         "projectId": id,
@@ -25,21 +35,46 @@ router.post('/projects/', (req, res) => {
 
 router.get('/projects/', (req, res) => {
     var projectsRef = data.database.ref('projects');
-    var response = {
-        "text": "No Data"
-    };
-    projectsRef.on('value', (snapshot) => {
-        response = snapshot.val();
-        return res.send(response);
+    var response = {};
+    projectsRef.once('value', (snapshot) => {
+        if(snapshot.val() === null) {
+            response['text'] = "No Data";
+            return res.send(response);
+        } else {
+            response = snapshot.val();
+            return res.send(response);
+        }
     });
 });
 
 router.get('/project/:projectId', (req, res) => {
-    return res.send(`GET Project ID: ${req.params.projectId}`);
+    var projectsRef = data.database.ref(`projects/${req.params.projectId}`);
+    var response = {};
+    projectsRef.once('value', (snapshot) => {
+        if(snapshot.val() === null) {
+            response['text'] = "No Data";
+            return res.send(response);
+        } else {
+            response = snapshot.val();
+            return res.send(response);
+        }
+    });
 });
 
 router.delete('/project/:projectId', (req, res) => {
-    return res.send(`DEL Project ID: ${req.params.projectId}`);
+    var projectsRef = data.database.ref(`projects/${req.params.projectId}`);
+    var response = {};
+    projectsRef.once('value', (snapshot) => {
+        if(snapshot.val() === null) {
+            response['text'] = "Delete Failed: Does Not Exist"
+            res.send(response);
+        } else {
+            projectsRef.remove().then(function() {
+                response['text'] = "Delete Success"
+                res.send(response);
+            })
+        }
+    });        
 });
 
 router.get('/project/:projectId/contributors/', (req, res) => {
