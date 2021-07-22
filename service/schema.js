@@ -41,58 +41,72 @@
 */
 
 class Sample {
-    startTimestamp;
-    id;
-    ugen;
-    rate;
-    inputs;
-    source;
-    options;
+  startTimestamp;
+  id;
+  ugen;
+  rate;
+  inputs;
+  source;
+  options;
 
-    constructor(data) {
-        this.startTimestamp = data.startTimestamp;
-        this.id = data.id;
-        this.ugen = data.ugen;
-        this.rate = data.rate;
-        this.inputs = data.inputs;
-        this.source = data.source;
-        this.options = data.options;
-    }
+  constructor(data) {
+    this.startTimestamp = data.startTimestamp;
+    this.id = data.id;
+    this.ugen = data.ugen;
+    this.rate = data.rate;
+    this.inputs = data.inputs;
+    this.source = data.source;
+    this.options = data.options;
+  }
 }
 
 class TrackData {
-    originalSongRef;
-    sampledata;
+  originalSongRef;
+  sampledata;
 
-    constructor(data) {
-        this.originalSongRef = data.originalSongRef;
-        this.sampledata = [];
-        for(var i = 0; i < data.sampledata.length; i++) {
-            this.sampledata.push(new Sample(data.sampledata[i]));
-        }    
+  constructor(data) {
+    this.originalSongRef = data.originalSongRef;
+    this.sampledata = [];
+    for (var i = 0; i < data.sampledata.length; i++) {
+      this.sampledata.push(new Sample(data.sampledata[i]));
     }
+  }
+}
+
+class PlayRequest {
+  id;
+  state;
+  locked;
+  cancelled;
+  changed;
+  prevWork;
+  newWork;
+  constructor(data) {
+    this.id = id;
+    this.state = state;
+    this.locked = locked;
+    this.cancelled = cancelled;
+    this.changed = prevWork !== newWork ? true : false;
+  }
 }
 
 class Project {
-    name;
-    description;
-    contributors;
-    trackdata;
+  name;
+  description;
+  contributors;
+  trackdata;
 
-    constructor(data) {
-        this.name = data.name;
-        this.description = data.description;
-        this.contributors = data.contributors;
-        this.trackdata = new TrackData(data.trackdata);
-    }
+  constructor(data) {
+    this.name = data.name;
+    this.description = data.description;
+    this.contributors = data.contributors;
+    this.trackdata = new TrackData(data.trackdata);
+  }
 }
 
 module.exports = {
-    Project
-}
-
-
-
+  Project,
+};
 
 // var schema = require('js-schema');
 // var flocking = require('flocking');
@@ -102,7 +116,6 @@ module.exports = {
 //     frequency : Number,
 //     oscillator : String,
 // });
-
 
 // class Sample {
 //     // id
@@ -115,11 +128,9 @@ module.exports = {
 //     // list of Sample objects, with corresponding timestamps
 // }
 
-
 // // // LATER
 // // class History {
 // // }
 
 // // class PlayRequest {
 // // }
-
