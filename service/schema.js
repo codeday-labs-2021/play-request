@@ -31,7 +31,7 @@ class Sample {
     timestamp;
     length;
     name;
-	ref;
+	  ref;
 
     constructor(data) {
 		this.timestamp = data.timestamp;
@@ -44,16 +44,16 @@ class Sample {
 class TrackData {
     songref;
     sampledata;
-	effectdata;
+	  effectdata;
 
     constructor(data) {
         this.songref = data.songref;
         this.sampledata = [];
-		this.effectdata = [];
+		    this.effectdata = [];
         for(var i = 0; i < data.sampledata.length; i++) {
             this.sampledata.push(new Sample(data.sampledata[i]));
         }
-		for(var i = 0; i < data.effectdata.length; i++) {
+		    for(var i = 0; i < data.effectdata.length; i++) {
             this.effectdata.push(new Sample(data.effectdata[i]));
         }
     }
@@ -71,6 +71,23 @@ class Project {
         this.contributors = data.contributors;
         this.trackdata = new TrackData(data.trackdata);
     }
+}
+
+class PlayRequest {
+  id;
+  state;
+  locked;
+  cancelled;
+  changed;
+  prevWork;
+  newWork;
+  constructor(data) {
+    this.id = id;
+    this.state = state;
+    this.locked = locked;
+    this.cancelled = cancelled;
+    this.changed = prevWork !== newWork ? true : false;
+  }
 }
 
 function RequestError(statusCode, description) {
@@ -94,6 +111,7 @@ function RequestSuccess(statusCode, description, args=null) {
 	return msg;
 }
 
+
 module.exports = {
-    Project, TrackData, Sample, RequestError, RequestSuccess
+    Project, TrackData, Sample, RequestError, RequestSuccess, PlayRequest
 }
