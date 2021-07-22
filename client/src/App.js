@@ -6,7 +6,6 @@ import First from "./routes/First";
 import Workspace from "./routes/Workspace";
 
 const App = () => {
-  // return <h1>Hello, World!</h1>;
   return (
     <BrowserRouter>
       <Navigation />

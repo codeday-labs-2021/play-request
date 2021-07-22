@@ -4,29 +4,23 @@ import Random from "../components/RandFeatures";
 import ListSamples from "../components/Samples";
 import LatestChat from "../components/LatestChat";
 import LastMix from "../components/LastMix";
-import Chatroom from "../components/Chatroom";
+import FriendList from "../components/FriendList";
+import "./First.css";
 
 function First() {
   return (
-    <div className="homePage">
-      <h1>homepage</h1>
-      <div className="samples">
-        <p>ListSamples</p>
+    <div className="row">
+      <div className="column1">
+        <ListSamples />
+        <PrevWorks />
       </div>
-      <div className="prevWorks">
-        <p>Previous Works</p>
+      <div className="column2">
+        <LastMix />
+        <Random />
       </div>
-      <div className="lastMix">
-        <p>user's last mix</p>
-      </div>
-      <div className="randomFeature">
-        <p>random features</p>
-      </div>
-      <div className="lastChat">
-        <p>user's last chat</p>
-      </div>
-      <div className="friendList">
-        <p>Friend list</p>
+      <div className="column3">
+        <LatestChat />
+        <FriendList />
       </div>
     </div>
   );

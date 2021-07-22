@@ -1,7 +1,8 @@
 import React from "react";
+import Form from "../components/Form";
 
 function Entry() {
-  return <h1>This is an Entry page</h1>;
+  return <Form />;
 }
 
 export default Entry;
