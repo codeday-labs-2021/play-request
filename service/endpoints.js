@@ -1,22 +1,28 @@
+// UUID generator library that generates random ids
 import { v4 as uuidv4 } from 'uuid';
-import { uploadBytes } from "firebase/storage";
 
-
+// express
 var express = require('express');
+// firebase
 var data = require('./database');
+// schema objects
 const schema = require("./schema");
+// firebase web patch library
 global.XMLHttpRequest = require("xhr2");
+// library to handle file streaming in express
 const multer  = require('multer')
 const upload = multer();
 
-
+// create express router to handle endpoints
 var router = express.Router();
 
+// create middleware that logs the timestamp when request is received
 router.use(function timeLog(req, res, next) {
     console.log('Request Received - Time: ', new Date(new Date().toUTCString()));
     next();
 });
 
+// function that checks if a realtime database reference has no contents, and if so, returns an error. if it doesn't, it returns the value
 function verifyNull(snapshot, resHandler) {    
     if(snapshot.val() === null) {
         return resHandler.send(schema.RequestError(404, "no data available"));
@@ -28,6 +34,7 @@ function verifyNull(snapshot, resHandler) {
 
 // PROJECTS ----------------------------------------------
 
+// create a project. the request body mirrors the Project object
 router.post('/projects/', (req, res) => {
     const id = uuidv4();
     var project = new schema.Project(req.body);
@@ -38,6 +45,7 @@ router.post('/projects/', (req, res) => {
     return res.send(schema.RequestSuccess(201, "project created successfully", response));
 });
 
+// get a list of all projects
 router.get('/projects/', (req, res) => {
     var projectsRef = data.database.ref('projects');
     projectsRef.once('value', (snapshot) => {
@@ -45,6 +53,7 @@ router.get('/projects/', (req, res) => {
     });
 });
 
+// get a specific project by its UUID
 router.get('/project/:projectId', (req, res) => {
     var projectsRef = data.database.ref(`projects/${req.params.projectId}`);
     projectsRef.once('value', (snapshot) => {
@@ -52,6 +61,7 @@ router.get('/project/:projectId', (req, res) => {
     });
 });
 
+// delete a specific project by its UUID
 router.delete('/project/:projectId', (req, res) => {
     var projectsRef = data.database.ref(`projects/${req.params.projectId}`);
     projectsRef.once('value', (snapshot) => {
@@ -65,6 +75,7 @@ router.delete('/project/:projectId', (req, res) => {
     });        
 });
 
+// get a list of contributors by the project's UUID
 router.get('/project/:projectId/contributors/', (req, res) => {
     var ref = data.database.ref(`projects/${req.params.projectId}/contributors/`);
     ref.once('value', (snapshot) => {
@@ -72,6 +83,7 @@ router.get('/project/:projectId/contributors/', (req, res) => {
     });
 });
 
+// update the music track in the project with a patch request. the request body mirrors the TrackData object
 router.patch('/project/:projectId/track/', (req, res) => {
     var track = new schema.TrackData(req.body);
     data.database.ref(`projects/${req.params.projectId}/trackdata`).set(JSON.parse(JSON.stringify(track)));
@@ -81,6 +93,7 @@ router.patch('/project/:projectId/track/', (req, res) => {
     return res.send(schema.RequestSuccess(200, "track updated successfully", response));
 });
 
+// update the project as a whole with a patch request. the request body mirrors the Project object
 router.patch('/project/:projectId/', (req, res) => {
     var project = new schema.Project(req.body);
     data.database.ref(`projects/${req.params.projectId}`).set(JSON.parse(JSON.stringify(project)));
@@ -92,7 +105,19 @@ router.patch('/project/:projectId/', (req, res) => {
 
 // SAMPLES -------------------------------------------------
 
-function createSample(storageRef, databaseRef, id, responseHandler, requestFile) {
+/*
+
+TODO:
+
+when sending an mp3 file of a sample to the backend, remember to set the header 'enctype' to 'multipart/form-data'
+
+to test the upload of a file, use the below curl command:
+curl -X POST -F 'sample=@<absolute file location>' http://localhost:4000/project/<project id>/samples/
+
+*/
+
+// helper function for creating a sample. the function adds the mp3 file to firebase storage, and creates a realtime database entry on the sample details
+function createMP3(storageRef, databaseRef, id, responseHandler, requestFile) {
     storageRef.put(new Uint8Array(requestFile.buffer)).then((snapshot) => {
         var metadata = {
             contentType: "audio/mpeg"
@@ -107,7 +132,7 @@ function createSample(storageRef, databaseRef, id, responseHandler, requestFile)
                     "downloadURL": url,
                 }
                 databaseRef.set(sampleMeta);
-                return responseHandler.send(schema.RequestSuccess(200, "sample saved successfully", {
+                return responseHandler.send(schema.RequestSuccess(200, "saved successfully", {
                     'id': id
                 }));
             });
@@ -115,38 +140,31 @@ function createSample(storageRef, databaseRef, id, responseHandler, requestFile)
     });
 }
 
-/*
-client side headers:
-headers: new Headers({
-    'enctype': 'multipart/form-data' // the enctype is important to work with multer on the server
-})
-
-curl post with:
-curl -X POST -F 'sample=@<file>' http://localhost:4000/project/<project id>/samples/
-*/
-
-
+// create a new universal sample. this endpoint accepts an mp3 file as input in the request, and passes it off to the helper function above
 router.post('/samples/', upload.single("sample"), (req, res) => {
     const id = uuidv4();
     var ref = data.storage.ref().child("samples").child("universal").child(id);
     var dataref = data.database.ref(`samples/universal/${id}`);
-    return createSample(ref, dataref, id, res, req.file);
+    return createMP3(ref, dataref, id, res, req.file);
 });
 
-router.get('/samples/', async (req, res) => {
+// gets a list of universal samples by querying the realtime database entries
+router.get('/samples/', (req, res) => {
     var ref = data.database.ref(`samples/universal/`)
     ref.once('value', (snapshot) => {
         return verifyNull(snapshot, res);
     });
 });
 
+// create a new project-specific sample. this endpoint accepts an mp3 file as input in the request, and passes it off to the helper function above
 router.post('/project/:projectId/samples/', upload.single("sample"), (req, res) => {
     const id = uuidv4();
     var ref = data.storage.ref().child("samples").child(req.params.projectId).child(id);
     var dataref = data.database.ref(`samples/${req.params.projectId}/${id}`);
-    return createSample(ref, dataref, id, res, req.file);
+    return createMP3(ref, dataref, id, res, req.file);
 });
 
+// gets a list of project-specific samples by querying the realtime database entries
 router.get('/project/:projectId/samples/', (req, res) => {
     var ref = data.database.ref(`samples/${req.params.projectId}`)
     ref.once('value', (snapshot) => {
@@ -154,65 +172,62 @@ router.get('/project/:projectId/samples/', (req, res) => {
     });
 });
 
-router.get('/project/:projectId/samples/:sampleId/', async (req, res) => {
+// get a specific project sample entry by providing the project id and the sample id
+router.get('/project/:projectId/sample/:sampleId/', (req, res) => {
     var ref = data.database.ref(`samples/${req.params.projectId}/${req.params.sampleId}`)
     ref.once('value', (snapshot) => {
         return verifyNull(snapshot, res);
     });
 });
 
-router.patch('/project/:projectId/samples/:sampleId/', (req, res) => {
-    return res.send(`PATCH Project Sample - Project ID: ${req.params.projectId}, Sample ID: ${req.params.sampleId}`);
+// update a specific project sample by project id and sample id. since firebase storage files cannot be "updated", this endpoint deletes it and recreates it with the same id
+router.patch('/project/:projectId/sample/:sampleId/', upload.single("sample"), (req, res) => {
+    var storageRef = data.storage.ref().child("samples").child(req.params.projectId).child(req.params.sampleId);
+    var databaseRef = data.database.ref(`samples/${req.params.projectId}/${req.params.sampleId}`);
+    storageRef.delete().then(() => {
+        databaseRef.remove().then(() => {
+            res.send(schema.RequestSuccess(200, "deleted successfully"));
+        });
+    });
+    createMP3(storageRef, databaseRef, req.params.sampleId, res, req.file);
 });
 
-router.delete('/project/:projectId/samples/:sampleId/', (req, res) => {
-    return res.send(`DEL Project Sample - Project ID: ${req.params.projectId}, Sample ID: ${req.params.sampleId}`);
-});
+// delete a specific project sample by project id and sample id
+router.delete('/project/:projectId/sample/:sampleId/', (req, res) => {
+    var storageRef = data.storage.ref().child("samples").child(req.params.projectId).child(req.params.sampleId);
+    var databaseRef = data.database.ref(`samples/${req.params.projectId}/${req.params.sampleId}`);
 
-// SOUND EFFECTS --------------------------------------------
-
-router.get('/effects/', async (req, res) => {
-    var effectRef = data.storage.ref().child('effects').child('universal');
-    var effects = [];
-    await effectRef.listAll().then((resp) => {
-        resp.items.forEach(async function(ref) {
-            await ref.getDownloadURL().then((url) => {
-                var ef = {
-                    fullpath: ref.fullPath,
-                    downloadurl: url
-                }
-                effects.push(ef);
-            }).then(() => {
-                return res.send(effects);
-            });
+    storageRef.delete().then(() => {
+        databaseRef.remove().then(() => {
+            res.send(schema.RequestSuccess(200, "deleted successfully"));
         });
     });
 });
 
-router.get('/project/:projectId/effects/', async (req, res) => {
-    var effectRef = data.storage.ref().child('effects').child(req.params.projectId);
-    var effects = [];
-    await effectRef.listAll().then((resp) => {
-        resp.items.forEach(async function(ref) {
-            await ref.getDownloadURL().then((url) => {
-                var ef = {
-                    fullpath: ref.fullPath,
-                    downloadurl: url
-                }
-                effects.push(ef);
-            }).then(() => {
-                return res.send(effects);
-            });
-        });
+// SOUND EFFECTS -------------------------------------------- 
+
+// create a new universal effect. this endpoint accepts an mp3 file as input in the request, and passes it off to the helper function above
+router.post('/effects/', upload.single("effect"), (req, res) => {
+    const id = uuidv4();
+    var ref = data.storage.ref().child("effects").child("universal").child(id);
+    var dataref = data.database.ref(`effects/universal/${id}`);
+    return createMP3(ref, dataref, id, res, req.file);
+});
+
+// gets a list of universal effects by querying the realtime database entries
+router.get('/effects/', (req, res) => {
+    var ref = data.database.ref(`effects/universal/`)
+    ref.once('value', (snapshot) => {
+        return verifyNull(snapshot, res);
     });
 });
 
-/*
-client side headers:
-headers: new Headers({
-    'enctype': 'multipart/form-data' // the enctype is important to work with multer on the server
-})
-*/
+// TODO here downward (though the effects endpoints are an exact duplicate of the samples endpoints)
+
+router.get('/project/:projectId/effects/', (req, res) => {
+    return res.send(`POST List Project Effects: ${req.params.projectId}`);
+});
+
 router.post('/project/:projectId/effects/', (req, res) => {
     return res.send(`POST Create Project Effects: ${req.params.projectId}`);
 });
