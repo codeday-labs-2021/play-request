@@ -2,9 +2,9 @@
 import { v4 as uuidv4 } from 'uuid';
 
 // express
-var express = require('express');
+const express = require('express');
 // firebase
-var data = require('./database');
+const data = require('./database');
 // schema objects
 const schema = require("./schema");
 // firebase web patch library
@@ -14,7 +14,7 @@ const multer  = require('multer')
 const upload = multer();
 
 // create express router to handle endpoints
-var router = express.Router();
+const router = express.Router();
 
 // create middleware that logs the timestamp when request is received
 router.use(function timeLog(req, res, next) {
@@ -27,7 +27,7 @@ function verifyNull(snapshot, resHandler) {
     if(snapshot.val() === null) {
         return resHandler.send(schema.RequestError(404, "no data available"));
     } else {
-        var response = snapshot.val();
+        const response = snapshot.val();
         return resHandler.send(response);
     }
 }
@@ -37,9 +37,9 @@ function verifyNull(snapshot, resHandler) {
 // create a project. the request body mirrors the Project object
 router.post('/projects/', (req, res) => {
     const id = uuidv4();
-    var project = new schema.Project(req.body);
+    const project = new schema.Project(req.body);
     data.database.ref('projects/' + id).set(JSON.parse(JSON.stringify(project)));
-    var response = {
+    const response = {
         "projectId": id,
     };
     return res.send(schema.RequestSuccess(201, "project created successfully", response));
@@ -47,7 +47,7 @@ router.post('/projects/', (req, res) => {
 
 // get a list of all projects
 router.get('/projects/', (req, res) => {
-    var projectsRef = data.database.ref('projects');
+    const projectsRef = data.database.ref('projects');
     projectsRef.once('value', (snapshot) => {
         return verifyNull(snapshot, res);
     });
