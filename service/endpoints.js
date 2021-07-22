@@ -273,6 +273,7 @@ router.post('/project/:projectId/request/:requestId/change/', (req, res) => {
 
 // MESSAGING ---------------------------------------------------
 
+// get all project-specific messages sent by users
 router.get('/project/:projectId/messages/', (req, res) => {
     const ref = data.database.ref(`messages/${req.params.projectId}/messages`)
     ref.once('value', (snapshot) => {
@@ -280,6 +281,7 @@ router.get('/project/:projectId/messages/', (req, res) => {
     });
 });
 
+// create a new message with properties mirroring Message object: text, senders, timestamp, id
 router.post('/project/:projectId/messages/', (req, res) => {
     const msg = new schema.Message(req.body);
     const counterRef = data.database.ref(`messages/${req.params.projectId}/currentMessageId`)
@@ -303,6 +305,7 @@ router.post('/project/:projectId/messages/', (req, res) => {
     });
 });
 
+// get a specific message by its id
 router.get('/project/:projectId/messages/:messageId/', (req, res) => {
     const ref = data.database.ref(`messages/${req.params.projectId}/messages/${req.params.messageId}`);
     ref.once('value', (snapshot) => {
@@ -310,12 +313,27 @@ router.get('/project/:projectId/messages/:messageId/', (req, res) => {
     });
 });
 
+// delete a specific message by its id
 router.delete('/project/:projectId/messages/:messageId/', (req, res) => {
-    return res.send(`DEL Project Message - Project ID: ${req.params.projectId}, Message ID: ${req.params.messageId}`);
+    const ref = data.database.ref(`messages/${req.params.projectId}/messages/${req.params.messageId}`);
+    ref.once('value', (snapshot) => {
+        if(snapshot.val() === null) {
+            res.send(schema.RequestError(404, "delete failed: message with provided id does not exist"));
+        } else {
+            ref.remove().then(function() {
+                res.send(schema.RequestSuccess(200, "deleted successfully"));
+            });
+        }
+    });    
 });
 
-router.patch('/project/:projectId/messages/:messageId/', (req, res) => {
-    return res.send(`PATCH Project Message - Project ID: ${req.params.projectId}, Message ID: ${req.params.messageId}`);
+// update a specific message's text by its id
+router.post('/project/:projectId/messages/:messageId/text/', (req, res) => {
+    const msg = new schema.Message(req.body);
+    const ref = data.database.ref(`messages/${req.params.projectId}/messages/${req.params.messageId}/text/`);
+    ref.set(msg.text).then(function() {
+        res.send(schema.RequestSuccess(200, "updated successfully"));
+    });
 });
 
 // WILDCARD ---------------------------------------------------
