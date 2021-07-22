@@ -17,24 +17,26 @@ function MainWorkspace() {
 
 function Workspace() {
   return (
-    <div className="wrapper">
-      <div className="column">
-        <div className="column__chatroom">
-          <Chatroom />
+    <div className="main-wrapper">
+      <div className="main-wrapper__wrapper">
+        <div className="wrapper__column">
+          <div className="column__chatroom">
+            <Chatroom />
+          </div>
+          <div className="column__instrument">
+            <Instruments />
+          </div>
         </div>
-        <div className="column__instrument">
-          <Instruments />
+        <div className="wrapper__column">
+          <MainWorkspace />
         </div>
-      </div>
-      <div className="column">
-        <MainWorkspace />
-      </div>
-      <div className="column">
-        <div className="column_samples">
-          <Samples />
-        </div>
-        <div className="column_soundeffects">
-          <SoundEffects />
+        <div className="wrapper__column">
+          <div className="column_samples">
+            <Samples />
+          </div>
+          <div className="column_soundeffects">
+            <SoundEffects />
+          </div>
         </div>
       </div>
     </div>
