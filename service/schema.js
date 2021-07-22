@@ -91,6 +91,26 @@ class PlayRequest {
 	}
 }
 
+class Message {
+	timestamp;
+	text;
+	id;
+	sender;
+
+	constructor(data) {
+		this.text = data.text;
+		this.sender = data.sender;
+	}
+
+	setId(id) {
+		this.id = id;
+	}
+
+	setTimestamp(timestamp) {
+		this.timestamp = timestamp;
+	}
+}
+
 function RequestError(statusCode, description) {
 	return {
 		"text": "error",
@@ -114,5 +134,5 @@ function RequestSuccess(statusCode, description, args=null) {
 
 
 module.exports = {
-    Project, TrackData, Sample, RequestError, RequestSuccess, PlayRequest
+    Project, TrackData, Sample, RequestError, RequestSuccess, PlayRequest, Message
 }

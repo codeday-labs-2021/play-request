@@ -23,11 +23,12 @@ router.use(function timeLog(req, res, next) {
 });
 
 // function that checks if a realtime database reference has no contents, and if so, returns an error. if it doesn't, it returns the value
-function verifyNull(snapshot, resHandler) {    
-    if(snapshot.val() === null) {
+function verifyNull(snapshot, resHandler) {
+    let snapshotVal = snapshot.val();    
+    if(snapshotVal === null) {
         return resHandler.send(schema.RequestError(404, "no data available"));
     } else {
-        const response = snapshot.val();
+        const response = snapshotVal;
         return resHandler.send(response);
     }
 }
@@ -298,30 +299,73 @@ router.post('/project/:projectId/request/:requestId/change/', (req, res) => {
 
 // MESSAGING ---------------------------------------------------
 
+// get all project-specific messages sent by users
 router.get('/project/:projectId/messages/', (req, res) => {
-    return res.send(`GET All Project Messages - Project ID: ${req.params.projectId}`);
+    const ref = data.database.ref(`messages/${req.params.projectId}/messages`)
+    ref.once('value', (snapshot) => {
+        return verifyNull(snapshot, res);
+    });
 });
 
-router.get('/project/:projectId/messages/:messageId/', (req, res) => {
-    return res.send(`GET Project Message - Project ID: ${req.params.projectId}, Message ID: ${req.params.messageId}`);
-});
-
+// create a new message with properties mirroring Message object: text, senders, timestamp, id
 router.post('/project/:projectId/messages/', (req, res) => {
-    return res.send(`POST Create Project Message - Project ID: ${req.params.projectId}`);
+    const msg = new schema.Message(req.body);
+    const counterRef = data.database.ref(`messages/${req.params.projectId}/currentMessageId`)
+    counterRef.once('value', (snapshot) => {
+        let msgId = 1;
+        if(snapshot.val() === null) {
+            counterRef.set(msgId);
+        } else {
+            msgId = parseInt(snapshot.val());
+            msgId += 1;
+            counterRef.set(msgId);
+        }
+        const messagesRef = data.database.ref(`messages/${req.params.projectId}/messages/${msgId}`)
+        msg.setId(msgId);
+        msg.setTimestamp(new Date(new Date().toUTCString()));
+        messagesRef.set(JSON.parse(JSON.stringify(msg))).then(() => {
+            res.send(schema.RequestSuccess(200, "created successfully", {
+                "id": msgId,
+            }));
+        });
+    });
 });
 
+// get a specific message by its id
+router.get('/project/:projectId/messages/:messageId/', (req, res) => {
+    const ref = data.database.ref(`messages/${req.params.projectId}/messages/${req.params.messageId}`);
+    ref.once('value', (snapshot) => {
+        return verifyNull(snapshot, res);
+    });
+});
+
+// delete a specific message by its id
 router.delete('/project/:projectId/messages/:messageId/', (req, res) => {
-    return res.send(`DEL Project Message - Project ID: ${req.params.projectId}, Message ID: ${req.params.messageId}`);
+    const ref = data.database.ref(`messages/${req.params.projectId}/messages/${req.params.messageId}`);
+    ref.once('value', (snapshot) => {
+        if(snapshot.val() === null) {
+            res.send(schema.RequestError(404, "delete failed: message with provided id does not exist"));
+        } else {
+            ref.remove().then(function() {
+                res.send(schema.RequestSuccess(200, "deleted successfully"));
+            });
+        }
+    });    
 });
 
-router.patch('/project/:projectId/messages/:messageId/', (req, res) => {
-    return res.send(`PATCH Project Message - Project ID: ${req.params.projectId}, Message ID: ${req.params.messageId}`);
+// update a specific message's text by its id
+router.post('/project/:projectId/messages/:messageId/text/', (req, res) => {
+    const msg = new schema.Message(req.body);
+    const ref = data.database.ref(`messages/${req.params.projectId}/messages/${req.params.messageId}/text/`);
+    ref.set(msg.text).then(function() {
+        res.send(schema.RequestSuccess(200, "updated successfully"));
+    });
 });
 
 // WILDCARD ---------------------------------------------------
 
 router.get('*', function(req, res) {
-    res.send("Malformed Endpoint");
+    res.send(schema.RequestError(404, "Malformed Endpoint"));
 });
 
 // ------------------------------------------------------------
