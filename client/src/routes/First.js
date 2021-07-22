@@ -9,18 +9,28 @@ import "./First.css";
 
 function First() {
   return (
-    <div className="row">
-      <div className="column1">
-        <ListSamples />
-        <PrevWorks />
+    <div class="container">
+      <div class="row">
+        <div class="col-1">
+          <ListSamples />
+        </div>
+        <div class="col-2">
+          <LastMix />
+        </div>
+        <div class="col-3">
+          <LatestChat />
+        </div>
       </div>
-      <div className="column2">
-        <LastMix />
-        <Random />
-      </div>
-      <div className="column3">
-        <LatestChat />
-        <FriendList />
+      <div class="row">
+        <div class="col-1">
+          <PrevWorks />
+        </div>
+        <div class="col-2">
+          <Random />
+        </div>
+        <div class="col-3">
+          <FriendList />
+        </div>
       </div>
     </div>
   );

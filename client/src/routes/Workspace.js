@@ -21,7 +21,7 @@ function Workspace() {
       <div className="main-wrapper__wrapper">
         <div className="wrapper__column">
           <div className="column__chatroom">
-            <Chatroom />
+            <LatestChat />
           </div>
           <div className="column__instrument">
             <Instruments />
