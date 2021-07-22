@@ -222,26 +222,52 @@ router.get('/effects/', (req, res) => {
     });
 });
 
-// TODO here downward (though the effects endpoints are an exact duplicate of the samples endpoints)
-
+// gets a list of project-specific effects by querying the realtime database entries
 router.get('/project/:projectId/effects/', (req, res) => {
-    return res.send(`POST List Project Effects: ${req.params.projectId}`);
+    const ref = data.database.ref(`effects/${req.params.projectId}`)
+    ref.once('value', (snapshot) => {
+        return verifyNull(snapshot, res);
+    });
 });
 
+// create a new project-specific effect. this endpoint accepts an mp3 file as input in the request, and passes it off to the helper function above
 router.post('/project/:projectId/effects/', (req, res) => {
-    return res.send(`POST Create Project Effects: ${req.params.projectId}`);
+    const id = uuidv4();
+    const ref = data.storage.ref().child("effects").child(req.params.projectId).child(id);
+    const dataref = data.database.ref(`effects/${req.params.projectId}/${id}`);
+    return createMP3(ref, dataref, id, res, req.file);
 });
 
+// get a specific project effect entry by providing the project id and the effect id
 router.get('/project/:projectId/effects/:effectId/', (req, res) => {
-    return res.send(`GET Project Effect - Project ID: ${req.params.projectId}, Effect ID: ${req.params.effectId}`);
+    const ref = data.database.ref(`effects/${req.params.projectId}/${req.params.sampleId}`)
+    ref.once('value', (snapshot) => {
+        return verifyNull(snapshot, res);
+    });
 });
 
+// update a specific project effect by project id and effect id. since firebase storage files cannot be "updated", this endpoint deletes it and recreates it with the same id
 router.patch('/project/:projectId/effects/:effectId/', (req, res) => {
-    return res.send(`PATCH Project Effect - Project ID: ${req.params.projectId}, Effect ID: ${req.params.effectId}`);
+    const storageRef = data.storage.ref().child("effects").child(req.params.projectId).child(req.params.sampleId);
+    const databaseRef = data.database.ref(`effects/${req.params.projectId}/${req.params.sampleId}`);
+    storageRef.delete().then(() => {
+        databaseRef.remove().then(() => {
+            res.send(schema.RequestSuccess(200, "deleted successfully"));
+        });
+    });
+    createMP3(storageRef, databaseRef, req.params.sampleId, res, req.file);
 });
 
+// delete a specific project effect by project id and effect id
 router.delete('/project/:projectId/effects/:effectId/', (req, res) => {
-    return res.send(`DEL Project Effect - Project ID: ${req.params.projectId}, Effect ID: ${req.params.effectId}`);
+    const storageRef = data.storage.ref().child("effects").child(req.params.projectId).child(req.params.sampleId);
+    const databaseRef = data.database.ref(`effects/${req.params.projectId}/${req.params.sampleId}`);
+
+    storageRef.delete().then(() => {
+        databaseRef.remove().then(() => {
+            res.send(schema.RequestSuccess(200, "deleted successfully"));
+        });
+    });
 });
 
 // PLAY REQUESTS ------------------------------------------
