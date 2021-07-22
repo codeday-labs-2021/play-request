@@ -8,7 +8,6 @@ const schema = require("./schema");
 global.XMLHttpRequest = require("xhr2");
 const multer  = require('multer')
 const upload = multer();
-const fs = require('fs');
 
 
 var router = express.Router();
@@ -73,7 +72,7 @@ router.get('/project/:projectId/contributors/', (req, res) => {
     });
 });
 
-router.post('/project/:projectId/track/', (req, res) => {
+router.patch('/project/:projectId/track/', (req, res) => {
     var track = new schema.TrackData(req.body);
     data.database.ref(`projects/${req.params.projectId}/trackdata`).set(JSON.parse(JSON.stringify(track)));
     var response = {
@@ -93,67 +92,73 @@ router.patch('/project/:projectId/', (req, res) => {
 
 // SAMPLES -------------------------------------------------
 
-router.get('/samples/', async (req, res) => {
-    var sampleRef = data.storage.ref().child('samples').child('universal');
-    var samples = [];
-    await sampleRef.listAll().then((resp) => {
-        resp.items.forEach(async function(ref) {
-            await ref.getDownloadURL().then((url) => {
-                var sp = {
-                    fullpath: ref.fullPath,
-                    downloadurl: url
+function createSample(storageRef, databaseRef, id, responseHandler, requestFile) {
+    storageRef.put(new Uint8Array(requestFile.buffer)).then((snapshot) => {
+        var metadata = {
+            contentType: "audio/mpeg"
+        }
+        storageRef.updateMetadata(metadata).then((metadata) => {
+            storageRef.getDownloadURL().then((url) => {
+                var sampleMeta = {
+                    "filename": requestFile.originalname,
+                    "id": id,
+                    "type": "audio/mpeg",
+                    "path": storageRef.fullPath,
+                    "downloadURL": url,
                 }
-                samples.push(sp);
-            }).then(() => {
-                return res.send(samples);
+                databaseRef.set(sampleMeta);
+                return responseHandler.send(schema.RequestSuccess(200, "sample saved successfully", {
+                    'id': id
+                }));
             });
         });
     });
-});
-
-router.get('/project/:projectId/samples/', async (req, res) => {
-    var sampleRef = data.storage.ref().child('samples').child(req.params.projectId);
-    var samples = [];
-    await sampleRef.listAll().then((resp) => {
-        resp.items.forEach(async function(ref) {
-            await ref.getDownloadURL().then((url) => {
-                var sp = {
-                    fullpath: ref.fullPath,
-                    downloadurl: url
-                }
-                samples.push(sp);
-            }).then(() => {
-                return res.send(samples);
-            });
-        });
-    });
-});
+}
 
 /*
 client side headers:
 headers: new Headers({
     'enctype': 'multipart/form-data' // the enctype is important to work with multer on the server
 })
-*/
-router.post('/project/:projectId/samples/', upload.single("sample"), (req, res) => {
-    // let uploadLocation = __dirname + "/uploadtest/file.mp3";
-    // fs.writeFileSync(uploadLocation, Buffer.from(new Uint8Array(req.file.buffer)));
-    // console.log(req.file);
-    var ref = data.storage.ref().child("samples").child(req.params.projectId).child(req.file.originalname);
-    ref.put(new Uint8Array(req.file.buffer)).then((snapshot) => {
-        var metadata = {
-            contentType: "audio/mpeg"
-        }
-        ref.updateMetadata(metadata).then((metadata) => {
-            return res.send(schema.RequestSuccess(200, "sample saved successfully"));
-        });
-    });
 
-    // return res.send(`POST Create Project Sample: ${req.params.projectId}`);
+curl post with:
+curl -X POST -F 'sample=@<file>' http://localhost:4000/project/<project id>/samples/
+*/
+
+
+router.post('/samples/', upload.single("sample"), (req, res) => {
+    const id = uuidv4();
+    var ref = data.storage.ref().child("samples").child("universal").child(id);
+    var dataref = data.database.ref(`samples/universal/${id}`);
+    return createSample(ref, dataref, id, res, req.file);
 });
 
-router.get('/project/:projectId/samples/:sampleId/', (req, res) => {
-    return res.send(`GET Project Sample - Project ID: ${req.params.projectId}, Sample ID: ${req.params.sampleId}`);
+router.get('/samples/', async (req, res) => {
+    var ref = data.database.ref(`samples/universal/`)
+    ref.once('value', (snapshot) => {
+        return verifyNull(snapshot, res);
+    });
+});
+
+router.post('/project/:projectId/samples/', upload.single("sample"), (req, res) => {
+    const id = uuidv4();
+    var ref = data.storage.ref().child("samples").child(req.params.projectId).child(id);
+    var dataref = data.database.ref(`samples/${req.params.projectId}/${id}`);
+    return createSample(ref, dataref, id, res, req.file);
+});
+
+router.get('/project/:projectId/samples/', (req, res) => {
+    var ref = data.database.ref(`samples/${req.params.projectId}`)
+    ref.once('value', (snapshot) => {
+        return verifyNull(snapshot, res);
+    });
+});
+
+router.get('/project/:projectId/samples/:sampleId/', async (req, res) => {
+    var ref = data.database.ref(`samples/${req.params.projectId}/${req.params.sampleId}`)
+    ref.once('value', (snapshot) => {
+        return verifyNull(snapshot, res);
+    });
 });
 
 router.patch('/project/:projectId/samples/:sampleId/', (req, res) => {
