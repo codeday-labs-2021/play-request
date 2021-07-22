@@ -1,10 +1,6 @@
 @import "../reset.css";
 
-* {
-  box-sizing: border-box;
-}
-
-body {
+.main-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,14 +8,15 @@ body {
   height: 100vh;
   background-color: #121212;
   color: white;
+  box-sizing: border-box;
 }
 
-.wrapper {
+.main-wrapper__wrapper {
   display: flex;
   height: 90vh;
 }
 
-.column {
+.wrapper__column {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -29,11 +26,11 @@ body {
   border: 2px solid #02feff;
 }
 
-.column:nth-child(2) {
+.wrapper__column:nth-child(2) {
   width: 60vw;
 }
 
-.column div {
+.wrapper__column div {
   height: 100%;
   width: 100%;
   border: 2px solid #02feff;
