@@ -118,14 +118,14 @@ function Effects() {
   }, [setAppState]);
 
   return (
-    <div className="box-container">
-      <h1 className="box-title">Effects</h1>
-      <h2 className="sub-text">Universal</h2>
+    <div className="panel">
+      <h1 className="panel__title">Effects</h1>
+      <h2 className="panel__subtitle">Universal</h2>
       <WithLoadingComponent
         isLoading={appState.loading}
         effects={appState.universalEffects}
       />
-      <h2 className="sub-text">Project</h2>
+      <h2 className="panel__subtitle">Project</h2>
       <WithLoadingComponent
         isLoading={appState.loading}
         effects={appState.projectEffects}

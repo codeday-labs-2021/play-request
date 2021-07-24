@@ -118,14 +118,14 @@ function Samples() {
   }, [setAppState]);
 
   return (
-    <div className="box-container">
-      <h1 className="box-title">Samples</h1>
-      <h2 className="sub-text">Universal</h2>
+    <div className="panel">
+      <h1 className="panel__title">Samples</h1>
+      <h2 className="panel__subtitle">Universal</h2>
       <WithLoadingComponent
         isLoading={appState.loading}
         samples={appState.universalSamples}
       />
-      <h2 className="sub-text">Project</h2>
+      <h2 className="panel__subtitle">Project</h2>
       <WithLoadingComponent
         isLoading={appState.loading}
         samples={appState.projectSamples}
