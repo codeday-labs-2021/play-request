@@ -1,5 +1,11 @@
 @import "../reset.css";
 
+html,body {
+  overflow-x: hidden;
+  height: 100%;
+  width: 100%;
+}
+
 .main-wrapper {
   display: flex;
   justify-content: center;
