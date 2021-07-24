@@ -232,7 +232,7 @@ router.get('/project/:projectId/effects/', (req, res) => {
 });
 
 // create a new project-specific effect. this endpoint accepts an mp3 file as input in the request, and passes it off to the helper function above
-router.post('/project/:projectId/effects/', (req, res) => {
+router.post('/project/:projectId/effects/', upload.single("effect"), (req, res) => {
     const id = uuidv4();
     const ref = data.storage.ref().child("effects").child(req.params.projectId).child(id);
     const dataref = data.database.ref(`effects/${req.params.projectId}/${id}`);
@@ -248,7 +248,7 @@ router.get('/project/:projectId/effects/:effectId/', (req, res) => {
 });
 
 // update a specific project effect by project id and effect id. since firebase storage files cannot be "updated", this endpoint deletes it and recreates it with the same id
-router.patch('/project/:projectId/effects/:effectId/', (req, res) => {
+router.patch('/project/:projectId/effects/:effectId/', upload.single("effect"), (req, res) => {
     const storageRef = data.storage.ref().child("effects").child(req.params.projectId).child(req.params.sampleId);
     const databaseRef = data.database.ref(`effects/${req.params.projectId}/${req.params.sampleId}`);
     storageRef.delete().then(() => {

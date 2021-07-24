@@ -19,7 +19,7 @@ html,body {
 
 .main-wrapper__wrapper {
   display: flex;
-  height: 90vh;
+  height: 95vh;
 }
 
 .wrapper__column {
