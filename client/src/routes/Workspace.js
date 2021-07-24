@@ -1,14 +1,12 @@
 import React from "react";
 import Chatroom from "../components/Chatroom";
 import Samples from "../components/Samples";
+import Effects from "../components/Effects";
+
 import "./Workspace.css";
 
 function Instruments() {
   return <span>Instruments</span>;
-}
-
-function SoundEffects() {
-  return <span>Sound effects</span>;
 }
 
 function MainWorkspace() {
@@ -35,7 +33,7 @@ function Workspace() {
             <Samples />
           </div>
           <div className="column_soundeffects">
-            <SoundEffects />
+            <Effects />
           </div>
         </div>
       </div>

@@ -1,11 +1,17 @@
 @import "../reset.css";
 
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
 .main-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
-  height: 100vh;
+  height: 95vh;
   background-color: #121212;
   color: white;
   box-sizing: border-box;
@@ -13,7 +19,7 @@
 
 .main-wrapper__wrapper {
   display: flex;
-  height: 90vh;
+  height: 95vh;
 }
 
 .wrapper__column {

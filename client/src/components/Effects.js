@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import "./BoxStyle.css";
 import axios from "axios";
 
-function WithLoadingComponent({ isLoading, samples }) {
+function WithLoadingComponent({ isLoading, effects }) {
   if (!isLoading) {
-    if (!samples || samples.length === 0) {
-      return <p>No Samples :(</p>;
+    if (!effects || effects.length === 0) {
+      return <p>No Effects :(</p>;
     }
-    return Object.keys(samples).map((samp) => {
+    return Object.keys(effects).map((eff) => {
       return (
-        <button key={samples[samp].id} className="button">
-          {samples[samp].filename}{" "}
+        <button key={effects[eff].id} className="button">
+          {effects[eff].filename}{" "}
         </button>
       );
     });
@@ -92,46 +92,46 @@ function WithLoadingComponent({ isLoading, samples }) {
   );
 }
 
-function Samples() {
+function Effects() {
   const [appState, setAppState] = useState({
     loading: false,
-    projectSamples: null,
-    universalSamples: null,
+    projectEffects: null,
+    universalEffects: null,
   });
 
   useEffect(() => {
     setAppState({ loading: true });
-    const projectApiUrl = `http://localhost:4000/project/607eb708-61a6-4cae-aca2-3f789a53dbdf/samples/`;
-    const universalApiUrl = `http://localhost:4000/samples/`;
-    const getSamples = async () => {
+    const projectApiUrl = `http://localhost:4000/project/607eb708-61a6-4cae-aca2-3f789a53dbdf/effects/`;
+    const universalApiUrl = `http://localhost:4000/effects/`;
+    const getEffects = async () => {
       let data = await axios.all([
         axios.get(universalApiUrl),
         axios.get(projectApiUrl),
       ]);
       setAppState({
         loading: false,
-        universalSamples: data[0].data,
-        projectSamples: data[1].data,
+        universalEffects: data[0].data,
+        projectEffects: data[1].data,
       });
     };
-    getSamples();
+    getEffects();
   }, [setAppState]);
 
   return (
     <div className="panel">
-      <h1 className="panel__title">Samples</h1>
+      <h1 className="panel__title">Effects</h1>
       <h2 className="panel__subtitle">Universal</h2>
       <WithLoadingComponent
         isLoading={appState.loading}
-        samples={appState.universalSamples}
+        effects={appState.universalEffects}
       />
       <h2 className="panel__subtitle">Project</h2>
       <WithLoadingComponent
         isLoading={appState.loading}
-        samples={appState.projectSamples}
+        effects={appState.projectEffects}
       />
     </div>
   );
 }
 
-export default Samples;
+export default Effects;
