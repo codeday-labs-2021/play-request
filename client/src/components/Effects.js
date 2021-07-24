@@ -36,7 +36,7 @@ function WithLoadingComponent({ isLoading, effects }) {
         r="0"
         fill="none"
         stroke="#4297de"
-        stroke-width="5"
+        strokeWidth="5"
       >
         <animate
           attributeName="r"
@@ -65,7 +65,7 @@ function WithLoadingComponent({ isLoading, effects }) {
         r="0"
         fill="none"
         stroke="#86eef9"
-        stroke-width="5"
+        strokeWidth="5"
       >
         <animate
           attributeName="r"
@@ -118,8 +118,8 @@ function Effects() {
   }, [setAppState]);
 
   return (
-    <div class="box-container">
-      <h1 class="box-title">Effects</h1>
+    <div className="box-container">
+      <h1 className="box-title">Effects</h1>
       <h2 className="sub-text">Universal</h2>
       <WithLoadingComponent
         isLoading={appState.loading}
