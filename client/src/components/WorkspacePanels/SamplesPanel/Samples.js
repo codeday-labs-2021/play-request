@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./BoxStyle.css";
+import "../BoxStyle.css";
 import axios from "axios";
 
 function WithLoadingComponent({ isLoading, samples }) {
