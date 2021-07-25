@@ -10,7 +10,7 @@ const App = () => {
     <BrowserRouter>
       <Navigation />
       <Route path="/" exact={true} component={Login} />
-      <Route path="/first" component={Gallery} />
+      {/* <Route path="/first" component={Gallery} /> */}
       <Route path="/workspace" component={Workspace} />
     </BrowserRouter>
   );
