@@ -1,7 +1,7 @@
 import React from "react";
 
-function First() {
+function Gallery() {
   return <h1>This is a first page</h1>;
 }
 
-export default First;
+export default Gallery;

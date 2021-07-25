@@ -1,9 +1,10 @@
-@import "../reset.css";
+@import "../../reset.css";
 
 html,
 body {
   height: 100%;
   width: 100%;
+  font-family: Lato, Arial, sans-serif;
 }
 
 .main-wrapper {
@@ -11,7 +12,7 @@ body {
   justify-content: center;
   align-items: center;
   width: 100vw;
-  height: 95vh;
+  height: 97vh;
   background-color: #121212;
   color: white;
   box-sizing: border-box;
@@ -19,7 +20,7 @@ body {
 
 .main-wrapper__wrapper {
   display: flex;
-  height: 95vh;
+  height: 97vh;
 }
 
 .wrapper__column {
@@ -34,6 +35,8 @@ body {
 
 .wrapper__column:nth-child(2) {
   width: 60vw;
+  border-top: 6px solid #02feff;
+  border-bottom: 6px solid #02feff;
 }
 
 .wrapper__column div {

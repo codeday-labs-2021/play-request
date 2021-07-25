@@ -5,13 +5,12 @@
 .panel__title {
   text-align: center;
   margin: 20px;
-  font-family: Lato, Arial, sans-serif;
+  margin-bottom: 35px;
   font-size: 20px;
   font-weight: bold;
 }
 
 .panel__subtitle {
-  font-family: Lato, Arial, sans-serif;
   font-size: 15px;
   margin: 10px;
 }
@@ -27,7 +26,6 @@
   padding: 0 30px;
   color: #fff;
   font-size: 12px;
-  font-family: Lato, Arial, sans-serif;
   text-transform: uppercase;
   transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
   will-change: transform;
