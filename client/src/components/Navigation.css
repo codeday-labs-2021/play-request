@@ -1,0 +1,17 @@
+.nav {
+  height: 3vh;
+  background-color: #121212;
+  text-align: center;
+  padding: 0.5vh;
+}
+
+.nav a {
+  font-family: Lato, Arial, sans-serif;
+  text-decoration: none;
+  color: #aed8f1;
+  margin: 10px;
+}
+
+.nav:active {
+  text-decoration: none;
+}
