@@ -6,7 +6,7 @@ function Navigation() {
   return (
     <div className="nav">
       <Link to="/">Login</Link>
-      <Link to="/first">Gallery</Link>
+      {/* <Link to="/first">Gallery</Link> */}
       <Link to="/workspace">Workspace</Link>
     </div>
   );
