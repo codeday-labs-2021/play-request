@@ -47,8 +47,3 @@
   box-shadow: 0 1px 1px 0 rgba(78, 74, 74, 0.1);
   transform: translate3d(0, 1px, 0);
 }
-
-.samples-list {
-  text-align: center;
-  margin: 0 auto;
-}
