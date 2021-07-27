@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Chatroom from "../../components/WorkspacePanels/ChatroomPanel/Chatroom";
 import Effects from "../../components/WorkspacePanels/EffectsPanel/Effects";
+import Samples from "../../components/WorkspacePanels/SamplesPanel/Samples";
 import MainWorkspace from "../../components/WorkspacePanels/MainWorkspacePanel/MainWorkspace";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -43,7 +44,8 @@ function Workspace() {
         </div>
         <div className="wrapper__column">
           <div className="column_samples">
-            <DragDropContext>
+            <Samples />
+            {/* <DragDropContext>
               <Droppable droppableId="samples">
                 {(provided) => (
                   <ul
@@ -76,7 +78,7 @@ function Workspace() {
                   </ul>
                 )}
               </Droppable>
-            </DragDropContext>
+            </DragDropContext> */}
           </div>
           <div className="column_soundeffects">
             <Effects />

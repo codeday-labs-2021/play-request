@@ -39,7 +39,9 @@ body {
   border-bottom: 6px solid #02feff;
 }
 
-.wrapper__column div {
+.wrapper__column .column_samples,
+.column_soundeffects,
+.column__chatroom {
   height: 100%;
   width: 100%;
   border: 2px solid #02feff;
