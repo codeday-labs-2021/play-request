@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "../BoxStyle.css";
 import axios from "axios";
 
@@ -7,11 +8,20 @@ function WithLoadingComponent({ isLoading, effects }) {
     if (!effects || effects.length === 0) {
       return <p>No Effects :(</p>;
     }
-    return Object.keys(effects).map((eff) => {
+    return Object.keys(effects).map((eff, index) => {
       return (
-        <button key={effects[eff].id} className="button">
-          {effects[eff].filename}{" "}
-        </button>
+        <Draggable draggableId={effects[eff].id} index={index}>
+          {(provided) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              className="button"
+            >
+              {effects[eff].filename}
+            </div>
+          )}
+        </Draggable>
       );
     });
   }
@@ -121,15 +131,39 @@ function Effects() {
     <div className="panel">
       <h1 className="panel__title">Effects</h1>
       <h2 className="panel__subtitle">Universal</h2>
-      <WithLoadingComponent
-        isLoading={appState.loading}
-        effects={appState.universalEffects}
-      />
+      <DragDropContext>
+        <Droppable droppableId="universal-effects">
+          {(provided) => (
+            <div
+              className="effects-list"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              <WithLoadingComponent
+                isLoading={appState.loading}
+                effects={appState.universalEffects}
+              />
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
       <h2 className="panel__subtitle">Project</h2>
-      <WithLoadingComponent
-        isLoading={appState.loading}
-        effects={appState.projectEffects}
-      />
+      <DragDropContext>
+        <Droppable droppableId="project-effects">
+          {(provided) => (
+            <div
+              className="effects-list"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              <WithLoadingComponent
+                isLoading={appState.loading}
+                effects={appState.projectEffects}
+              />
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 }
