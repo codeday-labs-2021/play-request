@@ -39,8 +39,8 @@ body {
   border-bottom: 6px solid #02feff;
 }
 
-.wrapper__column .column_samples,
-.column_soundeffects,
+.wrapper__column .column__samples,
+.column__soundeffects,
 .column__chatroom {
   height: 100%;
   width: 100%;

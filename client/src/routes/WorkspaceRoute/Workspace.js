@@ -18,10 +18,10 @@ function Workspace() {
           <MainWorkspace />
         </div>
         <div className="wrapper__column">
-          <div className="column_samples">
+          <div className="column__samples">
             <Samples />
           </div>
-          <div className="column_soundeffects">
+          <div className="column__soundeffects">
             <Effects />
           </div>
         </div>
