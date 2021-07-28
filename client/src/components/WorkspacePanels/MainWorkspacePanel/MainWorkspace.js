@@ -24,6 +24,7 @@ function pause_sound() {
 function set_volume() {
   var volume = audio.volume();
   volume = 0.5;
+  return console.log(volume);
 }
 
 function get_volume() {
@@ -33,7 +34,7 @@ function get_volume() {
 }
 
 function increase_volume() {
-  var volume = get_volume();
+  var volume = audio.get_volume();
   // if (volume != 0 && volume != 1) {
   //   volume = volume + 0.1;
   // }
@@ -41,13 +42,13 @@ function increase_volume() {
 }
 
 function decrease_volume() {
-  var volume = get_volume();
+  var volume = audio.get_volume();
   volume = volume - 0.1;
   return volume;
 }
 
 function restart_sound() {
-  if (audio.paused) {
+  if (audio.currentTime == 0) {
     audio.play();
   } else {
     audio.pause();
@@ -67,7 +68,7 @@ function MainWorkspace() {
         <button className="pause-button" onClick={pause_sound}>
           pause
         </button>
-        <button classname="restart-button" onClick={restart_sound}>
+        <button className="restart-button" onClick={restart_sound}>
           restart
         </button>
         <button className="increase-button" onClick={increase_volume}>
