@@ -4,8 +4,12 @@ import "./MainWorkspace.css";
 
 function MainWorkspace() {
   return (
-    <div className="panel">
-      <h1 className="panel__title">Main Workspace</h1>
+    <div className="main-panel">
+      <div className="main-panel__row"></div>
+      <div className="main-panel__row"></div>
+      <div className="main-panel__row"></div>
+      <div className="main-panel__row"></div>
+      <div className="main-panel__row"></div>
     </div>
   );
 }
