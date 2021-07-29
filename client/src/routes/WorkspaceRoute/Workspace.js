@@ -1,7 +1,7 @@
 import Chatroom from "../../components/WorkspacePanels/ChatroomPanel/Chatroom";
 import Effects from "../../components/WorkspacePanels/EffectsPanel/Effects";
 import Samples from "../../components/WorkspacePanels/SamplesPanel/Samples";
-import MainWorkspace from "../../components/WorkspacePanels/MainWorkspacePanel/MainWorkspace";
+import App from "../../components/WorkspacePanels/MainWorkspacePanel/MainWorkspace";
 
 import "./Workspace.css";
 
@@ -15,7 +15,7 @@ function Workspace() {
           </div>
         </div>
         <div className="wrapper__column">
-          <MainWorkspace />
+          <App />
         </div>
         <div className="wrapper__column">
           <div className="column__samples">
