@@ -38,15 +38,12 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 const grid = 8;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
   userSelect: "none",
   padding: grid * 2,
   margin: `0 0 ${grid}px 0`,
 
-  // change background colour if dragging
   background: isDragging ? "lightgreen" : "grey",
 
-  // styles we need to apply on draggables
   ...draggableStyle,
 });
 
@@ -74,7 +71,7 @@ const getListStyle2 = (isDraggingOver) => ({
   height: "100px",
 });
 
-class App extends Component {
+export default class App extends Component {
   state = {
     items: getItems(10),
     selected: getItems(5, 10),
@@ -190,19 +187,3 @@ class App extends Component {
     );
   }
 }
-
-ReactDOM.render(<App />, document.getElementById("root"));
-
-function MainWorkspace() {
-  return (
-    <div className="main-panel">
-      <div className="main-panel__row"></div>
-      <div className="main-panel__row"></div>
-      <div className="main-panel__row"></div>
-      <div className="main-panel__row"></div>
-      <div className="main-panel__row"></div>
-    </div>
-  );
-}
-
-export default MainWorkspace;
