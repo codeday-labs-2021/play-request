@@ -21,7 +21,7 @@
   display: flex;
   justify-content: center;
   align-content: center;
-  flex-direction: column;
+  flex-direction: row;
   text-decoration: none;
   background: #4c93be;
   box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.1);
@@ -46,4 +46,14 @@
 .button:active {
   box-shadow: 0 1px 1px 0 rgba(78, 74, 74, 0.1);
   transform: translate3d(0, 1px, 0);
+}
+
+.button-canvas {
+  display: flex;
+  height: 45px;
+  width: 100px;
+}
+
+.samples-text-div {
+  margin: auto;
 }

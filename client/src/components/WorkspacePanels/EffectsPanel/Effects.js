@@ -143,6 +143,7 @@ function Effects() {
                 isLoading={appState.loading}
                 effects={appState.universalEffects}
               />
+              {provided.placeholder}
             </div>
           )}
         </Droppable>
@@ -160,6 +161,7 @@ function Effects() {
                 isLoading={appState.loading}
                 effects={appState.projectEffects}
               />
+              {provided.placeholder}
             </div>
           )}
         </Droppable>
