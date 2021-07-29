@@ -1,9 +1,9 @@
 require("dotenv").config();
 
-var firebase = require("firebase");
+const firebase = require("firebase");
 import "firebase/storage";
 
-var firebaseConfig = {
+const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.FIREBASE_DATABASE_URL,
@@ -13,9 +13,9 @@ var firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
 };
 
-var fireApp = firebase.initializeApp(firebaseConfig);
-var database = firebase.database();
-var storage = firebase.storage();
+const fireApp = firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+const storage = firebase.storage();
 
 console.log(`Firebase Initialized - Profile: ${firebase.app().name}`);
 

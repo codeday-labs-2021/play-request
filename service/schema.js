@@ -51,10 +51,10 @@ class TrackData {
     this.sampledata = [];
     this.effectdata = [];
 
-    for (var i = 0; i < data.sampledata.length; i++) {
+    for (let i = 0; i < data.sampledata.length; i++) {
       this.sampledata.push(new Sample(data.sampledata[i]));
     }
-    for (var i = 0; i < data.effectdata.length; i++) {
+    for (let i = 0; i < data.effectdata.length; i++) {
       this.effectdata.push(new Sample(data.effectdata[i]));
     }
   }
@@ -120,7 +120,7 @@ function RequestError(statusCode, description) {
 }
 
 function RequestSuccess(statusCode, description, args = null) {
-  var msg = {
+  const msg = {
     text: "success",
     statusCode: statusCode,
     description: description,
