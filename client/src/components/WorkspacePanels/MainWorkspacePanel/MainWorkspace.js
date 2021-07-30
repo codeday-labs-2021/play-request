@@ -55,8 +55,8 @@ const MainWorkspace = ({ music }) => {
 
   return (
     <div className="timeline">
-      <Toolbar />
       {rows}
+      <Toolbar />
     </div>
   );
 };
