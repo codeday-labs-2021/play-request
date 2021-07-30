@@ -1,5 +1,6 @@
 import React from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
+import Toolbar from "../Toolbar/Toolbar";
 import "../BoxStyle.css";
 import "./MainWorkspace.css";
 
@@ -52,7 +53,12 @@ const MainWorkspace = ({ music }) => {
     );
   }
 
-  return <div className="timeline">{rows}</div>;
+  return (
+    <div className="timeline">
+      <Toolbar />
+      {rows}
+    </div>
+  );
 };
 
 export default MainWorkspace;
