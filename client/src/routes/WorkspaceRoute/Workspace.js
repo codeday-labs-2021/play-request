@@ -1,80 +1,106 @@
 import Chatroom from "../../components/WorkspacePanels/ChatroomPanel/Chatroom";
-import Effects from "../../components/WorkspacePanels/EffectsPanel/Effects";
+import {
+  Effects,
+  loadedProjectEffects,
+  loadedUniversalEffects,
+} from "../../components/WorkspacePanels/EffectsPanel/Effects";
 import {
   Samples,
   loadedProjectSamples,
   loadedUniversalSamples,
 } from "../../components/WorkspacePanels/SamplesPanel/Samples";
-import App from "../../components/WorkspacePanels/MainWorkspacePanel/MainWorkspace";
+import MainWorkspace from "../../components/WorkspacePanels/MainWorkspacePanel/MainWorkspace";
 import { DragDropContext } from "react-beautiful-dnd";
 import React, { useState } from "react";
 
 import "./Workspace.css";
 
-let workspaceMusic = [];
-
-// const [music, updateMusic] = useState(workspaceMusic);
-
-// Function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
+let workspaceMusic = [[], [], [], []];
 
 function getList(id) {
   if (id === "universal-samples") {
     return loadedUniversalSamples;
   } else if (id === "project-samples") {
     return loadedProjectSamples;
+  } else if (id === "project-effects") {
+    return loadedProjectEffects;
+  } else if (id === "universal-effects") {
+    return loadedUniversalEffects;
   }
 }
 
-const copy = (source, destination, droppableSource, droppableDestination) => {
-  console.log("==> dest", destination);
-
+const copy = (
+  source,
+  destination,
+  droppableSource,
+  droppableDestination,
+  timelineRow
+) => {
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
   const item = sourceClone[droppableSource.index];
 
-  destClone.splice(droppableDestination.index, 0, item);
+  destClone[timelineRow].splice(droppableDestination.index, 0, item);
   return destClone;
 };
 
-let onDragEnd = (result) => {
-  const { source, destination } = result;
-
-  // dropped outside the list
-  if (!destination) {
-    return;
-  }
-
-  if (source.droppableId !== destination.droppableId) {
-    workspaceMusic = copy(
-      getList(source.droppableId),
-      workspaceMusic,
-      source,
-      destination
-    );
-  }
-
-  console.log(workspaceMusic);
-};
-
+// component
 function Workspace() {
+  const [wsMusic, setWSMusic] = useState(workspaceMusic);
+
+  const handleDragEnd = (result) => {
+    const { source, destination } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      source.droppableId !== destination.droppableId &&
+      destination.droppableId.includes("timeline-drop")
+    ) {
+      // gets timeline row index
+      let timelineRow =
+        parseInt(destination.droppableId.split(/[- ]+/).pop()) - 1;
+
+      let originalList = getList(source.droppableId);
+
+      let cancel = false;
+
+      workspaceMusic[timelineRow].forEach((element) => {
+        console.log(element);
+        if (element.id === originalList[source.index].id) {
+          cancel = true;
+        }
+      });
+
+      if (!cancel) {
+        workspaceMusic = copy(
+          originalList,
+          workspaceMusic,
+          source,
+          destination,
+          timelineRow
+        );
+        console.log(workspaceMusic);
+        setWSMusic(workspaceMusic);
+      } else {
+        alert("Each timeline row may only have one instance of a track.");
+      }
+    }
+  };
+
   return (
     <div className="main-wrapper">
       <div className="main-wrapper__wrapper">
-        <DragDropContext onDragEnd={onDragEnd}>
+        <DragDropContext onDragEnd={handleDragEnd}>
           <div className="wrapper__column">
             <div className="column__chatroom">
               <Chatroom />
             </div>
           </div>
           <div className="wrapper__column">
-            <App />
+            <MainWorkspace music={wsMusic} />
           </div>
           <div className="wrapper__column">
             <div className="column__samples">

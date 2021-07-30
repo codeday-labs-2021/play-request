@@ -54,6 +54,7 @@
   width: 100px;
 }
 
-.samples-text-div {
+.samples-text-div,
+.effects-text-div {
   margin: auto;
 }

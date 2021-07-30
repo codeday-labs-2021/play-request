@@ -3,14 +3,43 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "../BoxStyle.css";
 import axios from "axios";
 
-function WithLoadingComponent({ isLoading, effects }) {
+let loadedProjectEffects = [];
+let loadedUniversalEffects = [];
+
+function WithLoadingComponent({ isLoading, effects, type }) {
   if (!isLoading) {
     if (!effects || effects.length === 0) {
       return <p>No Effects :(</p>;
     }
+    if (type === "universal") {
+      loadedUniversalEffects = [];
+    } else if (type === "project") {
+      loadedProjectEffects = [];
+    }
+
     return Object.keys(effects).map((eff, index) => {
+      if (type === "universal") {
+        loadedUniversalEffects.push({
+          id: effects[eff].id,
+          file: effects[eff].downloadURL,
+          name: effects[eff].filename,
+          type: "EFFECT",
+        });
+      } else if (type === "project") {
+        loadedProjectEffects.push({
+          id: effects[eff].id,
+          file: effects[eff].downloadURL,
+          name: effects[eff].filename,
+          type: "EFFECT",
+        });
+      }
+
       return (
-        <Draggable draggableId={effects[eff].id} index={index}>
+        <Draggable
+          draggableId={effects[eff].id}
+          index={index}
+          key={"effectdragkey-" + effects[eff].id}
+        >
           {(provided) => (
             <div
               ref={provided.innerRef}
@@ -18,7 +47,12 @@ function WithLoadingComponent({ isLoading, effects }) {
               {...provided.dragHandleProps}
               className="button"
             >
-              {effects[eff].filename}
+              <div className="effects-text-div">{effects[eff].filename}</div>
+
+              <canvas
+                className="button-canvas"
+                id={"canvas-" + effects[eff].id}
+              ></canvas>
             </div>
           )}
         </Draggable>
@@ -131,43 +165,41 @@ function Effects() {
     <div className="panel">
       <h1 className="panel__title">Effects</h1>
       <h2 className="panel__subtitle">Universal</h2>
-      <DragDropContext>
-        <Droppable droppableId="universal-effects">
-          {(provided) => (
-            <div
-              className="effects-list"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              <WithLoadingComponent
-                isLoading={appState.loading}
-                effects={appState.universalEffects}
-              />
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <Droppable droppableId="universal-effects">
+        {(provided) => (
+          <div
+            className="effects-list"
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            <WithLoadingComponent
+              isLoading={appState.loading}
+              effects={appState.universalEffects}
+              type="universal"
+            />
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
       <h2 className="panel__subtitle">Project</h2>
-      <DragDropContext>
-        <Droppable droppableId="project-effects">
-          {(provided) => (
-            <div
-              className="effects-list"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              <WithLoadingComponent
-                isLoading={appState.loading}
-                effects={appState.projectEffects}
-              />
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <Droppable droppableId="project-effects">
+        {(provided) => (
+          <div
+            className="effects-list"
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            <WithLoadingComponent
+              isLoading={appState.loading}
+              effects={appState.projectEffects}
+              type="project"
+            />
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </div>
   );
 }
 
-export default Effects;
+export { Effects, loadedProjectEffects, loadedUniversalEffects };

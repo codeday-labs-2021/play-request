@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-// import flocking from "flocking";
 import "../BoxStyle.css";
 import axios from "axios";
 
@@ -24,12 +23,14 @@ function WithLoadingComponent({ isLoading, samples, type }) {
           id: samples[samp].id,
           file: samples[samp].downloadURL,
           name: samples[samp].filename,
+          type: "SAMPLE",
         });
       } else if (type === "project") {
         loadedProjectSamples.push({
           id: samples[samp].id,
           file: samples[samp].downloadURL,
           name: samples[samp].filename,
+          type: "SAMPLE",
         });
       }
 
