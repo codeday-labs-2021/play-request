@@ -3,7 +3,7 @@ import express from "express";
 const PORT = 4000;
 const app = express();
 
-var cors = require("cors");
+const cors = require("cors");
 
 app.use(cors());
 app.use(express.json());
