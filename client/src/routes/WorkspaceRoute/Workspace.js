@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+import { DragDropContext } from "react-beautiful-dnd";
 import Chatroom from "../../components/WorkspacePanels/ChatroomPanel/Chatroom";
 import {
   Effects,
@@ -10,8 +12,6 @@ import {
   loadedUniversalSamples,
 } from "../../components/WorkspacePanels/SamplesPanel/Samples";
 import MainWorkspace from "../../components/WorkspacePanels/MainWorkspacePanel/MainWorkspace";
-import { DragDropContext } from "react-beautiful-dnd";
-import React, { useState } from "react";
 
 import "./Workspace.css";
 
@@ -29,6 +29,14 @@ function getList(id) {
   }
 }
 
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
 const copy = (
   source,
   destination,
@@ -44,6 +52,20 @@ const copy = (
   return destClone;
 };
 
+const move = (source, destination, droppableSource, droppableDestination) => {
+  const sourceClone = Array.from(source);
+  const destClone = Array.from(destination);
+  const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+  destClone.splice(droppableDestination.index, 0, removed);
+
+  const result = {};
+  result[droppableSource.droppableId] = sourceClone;
+  result[droppableDestination.droppableId] = destClone;
+
+  return result;
+};
+
 // component
 function Workspace() {
   const [wsMusic, setWSMusic] = useState(workspaceMusic);
@@ -55,8 +77,10 @@ function Workspace() {
       return;
     }
 
+    // from sample/effect list to timeline
     if (
-      source.droppableId !== destination.droppableId &&
+      (source.droppableId.includes("sample") ||
+        source.droppableId.includes("effect")) &&
       destination.droppableId.includes("timeline-drop")
     ) {
       // gets timeline row index
@@ -68,7 +92,6 @@ function Workspace() {
       let cancel = false;
 
       workspaceMusic[timelineRow].forEach((element) => {
-        console.log(element);
         if (element.id === originalList[source.index].id) {
           cancel = true;
         }
@@ -82,11 +105,50 @@ function Workspace() {
           destination,
           timelineRow
         );
-        console.log(workspaceMusic);
+
         setWSMusic(workspaceMusic);
       } else {
         alert("Each timeline row may only have one instance of a track.");
       }
+      // reordering in same row
+    } else if (
+      source.droppableId.includes("timeline-drop") &&
+      source.droppableId === destination.droppableId
+    ) {
+      let timelineRow =
+        parseInt(destination.droppableId.split(/[- ]+/).pop()) - 1;
+      workspaceMusic[timelineRow] = reorder(
+        workspaceMusic[timelineRow],
+        source.index,
+        destination.index
+      );
+
+      setWSMusic(workspaceMusic);
+    } else if (
+      source.droppableId.includes("timeline-drop") &&
+      destination.droppableId.includes("timeline-drop")
+    ) {
+      let sourceTimelineRow =
+        parseInt(source.droppableId.split(/[- ]+/).pop()) - 1;
+
+      let destTimelineRow =
+        parseInt(destination.droppableId.split(/[- ]+/).pop()) - 1;
+
+      if (sourceTimelineRow === destTimelineRow) {
+        return;
+      }
+
+      let moved = move(
+        workspaceMusic[sourceTimelineRow],
+        workspaceMusic[destTimelineRow],
+        source,
+        destination
+      );
+
+      workspaceMusic[sourceTimelineRow] = moved[source.droppableId];
+      workspaceMusic[destTimelineRow] = moved[destination.droppableId];
+
+      setWSMusic(workspaceMusic);
     }
   };
 

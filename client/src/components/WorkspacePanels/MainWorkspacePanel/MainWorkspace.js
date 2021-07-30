@@ -1,5 +1,5 @@
 import React from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 import "../BoxStyle.css";
 import "./MainWorkspace.css";
 
@@ -12,78 +12,47 @@ const getListStyle = (isDraggingOver) => ({
 });
 
 const MainWorkspace = ({ music }) => {
-  return (
-    <div className="timeline">
-      <Droppable droppableId="timeline-drop-row-1" direction="horizontal">
+  let rows = [];
+  for (let i = 0; i < 4; i++) {
+    rows.push(
+      <Droppable
+        droppableId={"timeline-drop-row-" + (i + 1)}
+        direction="horizontal"
+        key={"timeline-droppable-" + i}
+      >
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             style={getListStyle(snapshot.isDraggingOver)}
           >
-            {music[0].length !== 0 &&
-              music[0].map(({ id, file, name, type }) => (
-                <div className="track-object" key={id}>
-                  <div className="type-display">{type}</div>
-                  <div className="track-data">{name}</div>
-                </div>
+            {music[i].length !== 0 &&
+              music[i].map(({ id, file, name, type }, index) => (
+                <Draggable
+                  draggableId={"trackobjectdrag-" + id}
+                  index={index}
+                  key={"trackobject-" + id}
+                >
+                  {(provided) => (
+                    <div
+                      className="track-object"
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <div className="type-display">{type}</div>
+                      <div className="track-data">{name}</div>
+                    </div>
+                  )}
+                </Draggable>
               ))}
             {provided.placeholder}
           </div>
         )}
       </Droppable>
-      <Droppable droppableId="timeline-drop-row-2">
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            style={getListStyle(snapshot.isDraggingOver)}
-          >
-            {music[1].length !== 0 &&
-              music[1].map(({ id, file, name, type }) => (
-                <div className="track-object" key={id}>
-                  <div className="type-display">{type}</div>
-                  <div className="track-data">{name}</div>
-                </div>
-              ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-      <Droppable droppableId="timeline-drop-row-3">
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            style={getListStyle(snapshot.isDraggingOver)}
-          >
-            {music[2].length !== 0 &&
-              music[2].map(({ id, file, name, type }) => (
-                <div className="track-object" key={id}>
-                  <div className="type-display">{type}</div>
-                  <div className="track-data">{name}</div>
-                </div>
-              ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-      <Droppable droppableId="timeline-drop-row-4">
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            style={getListStyle(snapshot.isDraggingOver)}
-          >
-            {music[3].length !== 0 &&
-              music[3].map(({ id, file, name, type }) => (
-                <div className="track-object" key={id}>
-                  <div className="type-display">{type}</div>
-                  <div className="track-data">{name}</div>
-                </div>
-              ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </div>
-  );
+    );
+  }
+
+  return <div className="timeline">{rows}</div>;
 };
 
 export default MainWorkspace;
