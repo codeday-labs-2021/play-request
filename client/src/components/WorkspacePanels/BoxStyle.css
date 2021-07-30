@@ -50,6 +50,7 @@
 
 .button-canvas {
   display: flex;
+  margin-left: 10px;
   height: 45px;
   width: 100px;
 }
