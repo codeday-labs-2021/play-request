@@ -1,16 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Droppable, Draggable } from "react-beautiful-dnd";
+// import flock from "flocking";
 import "../BoxStyle.css";
 import axios from "axios";
 
-function WithLoadingComponent({ isLoading, samples }) {
+let loadedProjectSamples = [];
+let loadedUniversalSamples = [];
+
+function WithLoadingComponent({ isLoading, samples, type }) {
   if (!isLoading) {
     if (!samples || samples.length === 0) {
       return <p>No Samples :(</p>;
     }
+    if (type === "universal") {
+      loadedUniversalSamples = [];
+    } else if (type === "project") {
+      loadedProjectSamples = [];
+    }
+
     return Object.keys(samples).map((samp, index) => {
+      if (type === "universal") {
+        loadedUniversalSamples.push({
+          id: samples[samp].id,
+          file: samples[samp].downloadURL,
+          name: samples[samp].filename,
+          type: "SAMPLE",
+        });
+      } else if (type === "project") {
+        loadedProjectSamples.push({
+          id: samples[samp].id,
+          file: samples[samp].downloadURL,
+          name: samples[samp].filename,
+          type: "SAMPLE",
+        });
+      }
+
       return (
-        <Draggable draggableId={samples[samp].id} index={index}>
+        <Draggable
+          draggableId={samples[samp].id}
+          index={index}
+          key={"sampledragkey-" + samples[samp].id}
+        >
           {(provided) => (
             <div
               ref={provided.innerRef}
@@ -18,7 +48,12 @@ function WithLoadingComponent({ isLoading, samples }) {
               {...provided.dragHandleProps}
               className="button"
             >
-              {samples[samp].filename}
+              <div className="samples-text-div">{samples[samp].filename}</div>
+
+              <canvas
+                className="button-canvas"
+                id={"canvas-" + samples[samp].id}
+              ></canvas>
             </div>
           )}
         </Draggable>
@@ -131,41 +166,41 @@ function Samples() {
     <div className="panel">
       <h1 className="panel__title">Samples</h1>
       <h2 className="panel__subtitle">Universal</h2>
-      <DragDropContext>
-        <Droppable droppableId="universal-samples">
-          {(provided) => (
-            <div
-              className="samples-list"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              <WithLoadingComponent
-                isLoading={appState.loading}
-                samples={appState.universalSamples}
-              />
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <Droppable droppableId="universal-samples">
+        {(provided) => (
+          <div
+            className="samples-list"
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            <WithLoadingComponent
+              isLoading={appState.loading}
+              samples={appState.universalSamples}
+              type="universal"
+            />
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
       <h2 className="panel__subtitle">Project</h2>
-      <DragDropContext>
-        <Droppable droppableId="project-samples">
-          {(provided) => (
-            <div
-              className="samples-list"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              <WithLoadingComponent
-                isLoading={appState.loading}
-                samples={appState.projectSamples}
-              />
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <Droppable droppableId="project-samples">
+        {(provided) => (
+          <div
+            className="samples-list"
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            <WithLoadingComponent
+              isLoading={appState.loading}
+              samples={appState.projectSamples}
+              type="project"
+            />
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </div>
   );
 }
 
-export default Samples;
+export { Samples, loadedProjectSamples, loadedUniversalSamples };
