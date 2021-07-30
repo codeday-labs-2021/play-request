@@ -4,8 +4,8 @@ import "../BoxStyle.css";
 import "./MainWorkspace.css";
 
 const getListStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? "lightblue" : "#121212",
-  border: "3px solid #59636A",
+  background: isDraggingOver ? "#191919" : "#121212",
+  border: "3px solid " + (isDraggingOver ? "lightblue" : "#59636A"),
   padding: 8,
   height: "25%",
   display: "flex",
@@ -28,7 +28,7 @@ const MainWorkspace = ({ music }) => {
             {music[i].length !== 0 &&
               music[i].map(({ id, file, name, type }, index) => (
                 <Draggable
-                  draggableId={"trackobjectdrag-" + id}
+                  draggableId={"trackobjectdrag-" + i + "-" + id}
                   index={index}
                   key={"trackobject-" + id}
                 >

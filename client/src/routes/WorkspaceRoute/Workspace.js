@@ -124,6 +124,7 @@ function Workspace() {
       );
 
       setWSMusic(workspaceMusic);
+      // drop between timelines
     } else if (
       source.droppableId.includes("timeline-drop") &&
       destination.droppableId.includes("timeline-drop")
@@ -145,8 +146,20 @@ function Workspace() {
         destination
       );
 
-      workspaceMusic[sourceTimelineRow] = moved[source.droppableId];
-      workspaceMusic[destTimelineRow] = moved[destination.droppableId];
+      let cancel = false;
+
+      workspaceMusic[destTimelineRow].forEach((element) => {
+        if (element.id === workspaceMusic[sourceTimelineRow][source.index].id) {
+          cancel = true;
+        }
+      });
+
+      if (!cancel) {
+        workspaceMusic[sourceTimelineRow] = moved[source.droppableId];
+        workspaceMusic[destTimelineRow] = moved[destination.droppableId];
+      } else {
+        alert("Each timeline row may only have one instance of a track.");
+      }
 
       setWSMusic(workspaceMusic);
     }
