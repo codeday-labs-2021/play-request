@@ -8,6 +8,14 @@
   border-bottom: 1px solid white;
 }
 
+.timeline-row {
+  border-bottom: 0 !important;
+}
+
+.timeline-row:last-child {
+  border-bottom: 3px solid #59636a !important;
+}
+
 .timeline {
   width: 100%;
   height: 50%;

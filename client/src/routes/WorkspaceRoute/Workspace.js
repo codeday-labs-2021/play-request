@@ -114,8 +114,10 @@ function Workspace() {
       source.droppableId.includes("timeline-drop") &&
       source.droppableId === destination.droppableId
     ) {
+      console.log("here");
       let timelineRow =
         parseInt(destination.droppableId.split(/[- ]+/).pop()) - 1;
+      console.log(timelineRow);
       workspaceMusic[timelineRow] = reorder(
         workspaceMusic[timelineRow],
         source.index,

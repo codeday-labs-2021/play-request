@@ -8,7 +8,6 @@ const getListStyle = (isDraggingOver) => ({
   background: isDraggingOver ? "#191919" : "#121212",
   border: "3px solid " + (isDraggingOver ? "lightblue" : "#59636A"),
   padding: 8,
-  // height: "25%",
   flex: "1",
   display: "flex",
 });
@@ -24,6 +23,7 @@ const MainWorkspace = ({ music }) => {
       >
         {(provided, snapshot) => (
           <div
+            className="timeline-row"
             ref={provided.innerRef}
             style={getListStyle(snapshot.isDraggingOver)}
           >

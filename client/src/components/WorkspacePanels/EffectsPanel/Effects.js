@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
 import "../BoxStyle.css";
 import axios from "axios";
+import { Entry, Loading } from "../AudioEntry";
 
 let loadedProjectEffects = [];
 let loadedUniversalEffects = [];
@@ -34,106 +35,10 @@ function WithLoadingComponent({ isLoading, effects, type }) {
         });
       }
 
-      return (
-        <Draggable
-          draggableId={effects[eff].id}
-          index={index}
-          key={"effectdragkey-" + effects[eff].id}
-        >
-          {(provided) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-              className="button"
-            >
-              <div className="effects-text-div">{effects[eff].filename}</div>
-
-              <canvas
-                className="button-canvas"
-                id={"canvas-" + effects[eff].id}
-              ></canvas>
-            </div>
-          )}
-        </Draggable>
-      );
+      return <Entry trackData={effects[eff]} index={index}></Entry>;
     });
   }
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      xmlnsXlink="http://www.w3.org/1999/xlink"
-      style={{
-        margin: `auto`,
-        background: `none`,
-        display: `block`,
-        shapeRendering: `auto`,
-      }}
-      width="100px"
-      height="100px"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="xMidYMid"
-    >
-      <circle
-        cx="50"
-        cy="50"
-        r="0"
-        fill="none"
-        stroke="#4297de"
-        strokeWidth="5"
-      >
-        <animate
-          attributeName="r"
-          repeatCount="indefinite"
-          dur="1s"
-          values="0;44"
-          keyTimes="0;1"
-          keySplines="0 0.2 0.8 1"
-          calcMode="spline"
-          begin="0s"
-        ></animate>
-        <animate
-          attributeName="opacity"
-          repeatCount="indefinite"
-          dur="1s"
-          values="1;0"
-          keyTimes="0;1"
-          keySplines="0.2 0 0.8 1"
-          calcMode="spline"
-          begin="0s"
-        ></animate>
-      </circle>
-      <circle
-        cx="50"
-        cy="50"
-        r="0"
-        fill="none"
-        stroke="#86eef9"
-        strokeWidth="5"
-      >
-        <animate
-          attributeName="r"
-          repeatCount="indefinite"
-          dur="1s"
-          values="0;44"
-          keyTimes="0;1"
-          keySplines="0 0.2 0.8 1"
-          calcMode="spline"
-          begin="-0.5s"
-        ></animate>
-        <animate
-          attributeName="opacity"
-          repeatCount="indefinite"
-          dur="1s"
-          values="1;0"
-          keyTimes="0;1"
-          keySplines="0.2 0 0.8 1"
-          calcMode="spline"
-          begin="-0.5s"
-        ></animate>
-      </circle>
-    </svg>
-  );
+  return <Loading></Loading>;
 }
 
 function Effects() {
