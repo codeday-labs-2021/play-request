@@ -71,11 +71,45 @@ const AudioState = (wsMusic) => {
   const [audioIndex, setAudioIndex] = useState(playAudioIndex);
   const [audioPlaying, setAudioPlaying] = useState(false);
 
-  const audioToggle = () => setAudioPlaying(!audioPlaying);
+  const audioToggle = () => {
+    if (audioPlaying) {
+      setAudioPlaying(false);
+      for (let i = 0; i < wsMusic.length; i++) {
+        if (wsMusic[i][audioIndex[i]] != null) {
+          wsMusic[i][audioIndex[i]]["audio"].pause();
+        }
+      }
+    } else {
+      setAudioPlaying(true);
+      // for (let i = 0; i < wsMusic.length; i++) {
+      //   if (wsMusic[i][audioIndex[i]] != null) {
+      //     wsMusic[i][audioIndex[i]]["audio"].play();
+      //   }
+      // }
+    }
+  };
 
   useEffect(() => {
     if (audioPlaying) {
-      console.log(wsMusic);
+      for (let i = 0; i < wsMusic.length; i++) {
+        for (let j = 0; j < wsMusic[i].length; j++) {
+          const endedListener = () => {
+            wsMusic[i][j + 1]["audio"].play();
+            let indexClone = Array.from(audioIndex);
+            indexClone[i] = j + 1;
+            setAudioIndex(indexClone);
+            wsMusic[i][j]["audio"].removeEventListener("ended", endedListener);
+          };
+          if (wsMusic[i][j + 1] != null) {
+            wsMusic[i][j]["audio"].addEventListener("ended", endedListener);
+          }
+        }
+      }
+      for (let x = 0; x < wsMusic.length; x++) {
+        if (wsMusic[x][0] != null) {
+          wsMusic[x][0]["audio"].play();
+        }
+      }
     }
   }, [audioPlaying]);
 
