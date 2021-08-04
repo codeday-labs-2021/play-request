@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 import "../BoxStyle.css";
 import axios from "axios";
 
@@ -165,7 +165,7 @@ function Effects() {
     <div className="panel">
       <h1 className="panel__title">Effects</h1>
       <h2 className="panel__subtitle">Universal</h2>
-      <Droppable droppableId="universal-effects">
+      <Droppable droppableId="universal-effects" isDropDisabled={true}>
         {(provided) => (
           <div
             className="effects-list"
@@ -182,7 +182,7 @@ function Effects() {
         )}
       </Droppable>
       <h2 className="panel__subtitle">Project</h2>
-      <Droppable droppableId="project-effects">
+      <Droppable droppableId="project-effects" isDropDisabled={true}>
         {(provided) => (
           <div
             className="effects-list"

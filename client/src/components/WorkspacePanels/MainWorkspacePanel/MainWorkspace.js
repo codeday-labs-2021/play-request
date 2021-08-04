@@ -1,13 +1,15 @@
 import React from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
 import "../BoxStyle.css";
 import "./MainWorkspace.css";
+import TrackObject from "./TrackObject";
 
 const getListStyle = (isDraggingOver) => ({
   background: isDraggingOver ? "#191919" : "#121212",
   border: "3px solid " + (isDraggingOver ? "lightblue" : "#59636A"),
   padding: 8,
-  height: "25%",
+  // height: "25%",
+  flex: "1",
   display: "flex",
 });
 
@@ -27,23 +29,14 @@ const MainWorkspace = ({ music }) => {
           >
             {music[i].length !== 0 &&
               music[i].map(({ id, file, name, type }, index) => (
-                <Draggable
-                  draggableId={"trackobjectdrag-" + i + "-" + id}
+                <TrackObject
+                  id={id}
+                  file={file}
+                  name={name}
+                  type={type}
                   index={index}
-                  key={"trackobject-" + id}
-                >
-                  {(provided) => (
-                    <div
-                      className="track-object"
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <div className="type-display">{type}</div>
-                      <div className="track-data">{name}</div>
-                    </div>
-                  )}
-                </Draggable>
+                  i={i}
+                />
               ))}
             {provided.placeholder}
           </div>

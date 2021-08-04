@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import Chatroom from "../../components/WorkspacePanels/ChatroomPanel/Chatroom";
 import {
   Effects,
   loadedProjectEffects,
@@ -169,11 +168,6 @@ function Workspace() {
     <div className="main-wrapper">
       <div className="main-wrapper__wrapper">
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="wrapper__column">
-            <div className="column__chatroom">
-              <Chatroom />
-            </div>
-          </div>
           <div className="wrapper__column">
             <MainWorkspace music={wsMusic} />
           </div>

@@ -166,7 +166,7 @@ function Samples() {
     <div className="panel">
       <h1 className="panel__title">Samples</h1>
       <h2 className="panel__subtitle">Universal</h2>
-      <Droppable droppableId="universal-samples">
+      <Droppable droppableId="universal-samples" isDropDisabled={true}>
         {(provided) => (
           <div
             className="samples-list"
@@ -183,7 +183,7 @@ function Samples() {
         )}
       </Droppable>
       <h2 className="panel__subtitle">Project</h2>
-      <Droppable droppableId="project-samples">
+      <Droppable droppableId="project-samples" isDropDisabled={true}>
         {(provided) => (
           <div
             className="samples-list"
