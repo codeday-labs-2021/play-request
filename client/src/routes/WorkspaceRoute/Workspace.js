@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import {
   Effects,
@@ -46,6 +46,7 @@ const copy = (
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
   const item = sourceClone[droppableSource.index];
+  item["audio"] = new Audio(item["file"]);
 
   destClone[timelineRow].splice(droppableDestination.index, 0, item);
   return destClone;
@@ -65,9 +66,26 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   return result;
 };
 
+const AudioState = (wsMusic) => {
+  let playAudioIndex = [0, 0, 0, 0];
+  const [audioIndex, setAudioIndex] = useState(playAudioIndex);
+  const [audioPlaying, setAudioPlaying] = useState(false);
+
+  const audioToggle = () => setAudioPlaying(!audioPlaying);
+
+  useEffect(() => {
+    if (audioPlaying) {
+      console.log(wsMusic);
+    }
+  }, [audioPlaying]);
+
+  return [audioPlaying, audioToggle];
+};
+
 // component
 function Workspace() {
   const [wsMusic, setWSMusic] = useState(workspaceMusic);
+  const [audioPlaying, audioToggle] = AudioState(wsMusic);
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -114,10 +132,8 @@ function Workspace() {
       source.droppableId.includes("timeline-drop") &&
       source.droppableId === destination.droppableId
     ) {
-      console.log("here");
       let timelineRow =
         parseInt(destination.droppableId.split(/[- ]+/).pop()) - 1;
-      console.log(timelineRow);
       workspaceMusic[timelineRow] = reorder(
         workspaceMusic[timelineRow],
         source.index,
@@ -172,6 +188,9 @@ function Workspace() {
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="wrapper__column">
             <MainWorkspace music={wsMusic} />
+            <button onClick={audioToggle}>
+              {audioPlaying ? "Pause" : "Play"}
+            </button>
           </div>
           <div className="wrapper__column">
             <div className="column__samples">

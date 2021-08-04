@@ -28,15 +28,8 @@ const MainWorkspace = ({ music }) => {
             style={getListStyle(snapshot.isDraggingOver)}
           >
             {music[i].length !== 0 &&
-              music[i].map(({ id, file, name, type }, index) => (
-                <TrackObject
-                  id={id}
-                  file={file}
-                  name={name}
-                  type={type}
-                  index={index}
-                  i={i}
-                />
+              music[i].map((props, index) => (
+                <TrackObject musicProps={props} index={index} row={i} />
               ))}
             {provided.placeholder}
           </div>

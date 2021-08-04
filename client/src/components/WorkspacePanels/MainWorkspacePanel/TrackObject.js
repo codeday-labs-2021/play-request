@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
 const getContainerStyle = (draggableStyle, stateWidth) => ({
@@ -6,69 +6,55 @@ const getContainerStyle = (draggableStyle, stateWidth) => ({
   width: stateWidth,
 });
 
-class TrackObject extends Component {
-  constructor(props) {
-    super(props);
-    const { id, file, name, type, i, index } = props;
-    this.id = id;
-    this.file = file;
-    this.name = name;
-    this.type = type;
-    this.i = i;
-    this.index = index;
+const TrackObject = (props) => {
+  const { musicProps, index, row } = props;
+  const [width, setWidth] = useState(100);
 
-    this.state = {
-      width: "100px",
-    };
-  }
+  const setAudioDuration = () => {
+    if (musicProps.audio.duration <= 3) {
+      setWidth(80);
+    } else if (musicProps.audio.duration >= 100) {
+      setWidth(2 * musicProps.audio.duration);
+    } else {
+      setWidth(5 * musicProps.audio.duration);
+    }
+  };
 
-  componentDidMount() {
-    let au = new Audio(this.file);
-    au.onloadedmetadata = () => {
-      if (au.duration <= 3) {
-        this.setState({
-          width: 80,
-        });
-      } else if (au.duration >= 100) {
-        this.setState({
-          width: 2 * au.duration,
-        });
-      } else {
-        this.setState({
-          width: 5 * au.duration,
-        });
-      }
-    };
-  }
+  useEffect(() => {
+    if (musicProps.audio.readyState >= 1) {
+      setAudioDuration();
+    } else {
+      musicProps.audio.onloadedmetadata = () => {
+        setAudioDuration();
+      };
+    }
+  });
 
-  render() {
-    return (
-      <Draggable
-        draggableId={"trackobjectdrag-" + this.i + "-" + this.id}
-        index={this.index}
-        key={"trackobject-" + this.id}
-      >
-        {(provided) => (
-          <div
-            className="track-object"
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            style={getContainerStyle(
-              provided.draggableProps.style,
-              this.state.width
-            )}
-          >
-            <div className="type-display">{this.type}</div>
-            <div className="track-data">
-              <audio id={"music-" + this.id} src={this.file}></audio>
-              {this.name}
-            </div>
+  let track = (
+    <Draggable
+      draggableId={"trackobjectdrag-" + row + "-" + musicProps.id}
+      index={index}
+      key={"trackobject-" + musicProps.id}
+    >
+      {(provided) => (
+        <div
+          className="track-object"
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          style={getContainerStyle(provided.draggableProps.style, width)}
+        >
+          <div className="type-display">{musicProps.type}</div>
+          <div className="track-data">
+            <audio id={"music-" + musicProps.id} src={musicProps.file}></audio>
+            {musicProps.name}
           </div>
-        )}
-      </Draggable>
-    );
-  }
-}
+        </div>
+      )}
+    </Draggable>
+  );
+
+  return track;
+};
 
 export default TrackObject;
