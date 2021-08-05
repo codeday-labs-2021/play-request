@@ -1,5 +1,10 @@
+<<<<<<< HEAD
+import React, { useState } from "react";
+import { Droppable, Draggable } from "react-beautiful-dnd";
+=======
 import React from "react";
 import { Droppable } from "react-beautiful-dnd";
+>>>>>>> cd0d1ae406ded26a1428453e49b186ff980e154c
 import "../BoxStyle.css";
 import "./MainWorkspace.css";
 import TrackObject from "./TrackObject";
@@ -12,8 +17,15 @@ const getListStyle = (isDraggingOver) => ({
   display: "flex",
 });
 
-const MainWorkspace = ({ music }) => {
+const MainWorkspace = ({ music, musicSetter }) => {
   let rows = [];
+
+  const handleDelete = (event, row, index) => {
+    let musicClone = Array.from(music);
+    musicClone[row].splice(index, 1);
+    musicSetter(musicClone);
+  };
+
   for (let i = 0; i < 4; i++) {
     rows.push(
       <Droppable
