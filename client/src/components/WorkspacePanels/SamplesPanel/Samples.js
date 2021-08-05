@@ -35,10 +35,16 @@ const WithLoadingComponent = ({ isLoading, samples, type }) => {
         });
       }
 
-      return <Entry trackData={samples[samp]} index={index}></Entry>;
+      return (
+        <Entry
+          trackData={samples[samp]}
+          index={index}
+          key={"entry-" + samples[samp].id + "-" + index}
+        ></Entry>
+      );
     });
   }
-  return <Loading></Loading>;
+  return <Loading />;
 };
 
 function Samples() {

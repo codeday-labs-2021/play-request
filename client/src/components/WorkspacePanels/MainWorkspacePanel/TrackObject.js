@@ -34,7 +34,7 @@ const TrackObject = (props) => {
     <Draggable
       draggableId={"trackobjectdrag-" + row + "-" + musicProps.id}
       index={index}
-      key={"trackobject-" + musicProps.id}
+      // key={"trackobject-" + musicProps.id}
     >
       {(provided) => (
         <div

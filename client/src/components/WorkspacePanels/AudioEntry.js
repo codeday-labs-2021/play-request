@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
-const useAudio = (url) => {
+const UseAudio = (url) => {
   const [audio] = useState(new Audio(url));
   const [playing, setPlaying] = useState(false);
 
@@ -23,16 +23,12 @@ const useAudio = (url) => {
 };
 
 const Entry = ({ trackData, index }) => {
-  const [playing, toggle] = useAudio(trackData.downloadURL);
+  const [playing, toggle] = UseAudio(trackData.downloadURL);
 
   return (
-    <Draggable
-      draggableId={trackData.id}
-      index={index}
-      key={"dragkey-" + trackData.id}
-    >
+    <Draggable draggableId={trackData.id} index={index}>
       {(provided) => (
-        <React.Fragment>
+        <>
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
@@ -47,7 +43,7 @@ const Entry = ({ trackData, index }) => {
               </button>
             </div>
           </div>
-        </React.Fragment>
+        </>
       )}
     </Draggable>
   );
@@ -131,4 +127,4 @@ const Loading = () => {
   );
 };
 
-export { useAudio, Entry, Loading };
+export { UseAudio, Entry, Loading };

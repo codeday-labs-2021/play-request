@@ -35,10 +35,16 @@ function WithLoadingComponent({ isLoading, effects, type }) {
         });
       }
 
-      return <Entry trackData={effects[eff]} index={index}></Entry>;
+      return (
+        <Entry
+          trackData={effects[eff]}
+          index={index}
+          key={"entry-" + effects[eff].id + "-" + index}
+        ></Entry>
+      );
     });
   }
-  return <Loading></Loading>;
+  return <Loading />;
 }
 
 function Effects() {

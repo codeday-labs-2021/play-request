@@ -29,7 +29,12 @@ const MainWorkspace = ({ music }) => {
           >
             {music[i].length !== 0 &&
               music[i].map((props, index) => (
-                <TrackObject musicProps={props} index={index} row={i} />
+                <TrackObject
+                  musicProps={props}
+                  index={index}
+                  row={i}
+                  key={"trackobj-" + i + "-" + props.id}
+                />
               ))}
             {provided.placeholder}
           </div>

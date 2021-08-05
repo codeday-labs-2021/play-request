@@ -111,7 +111,7 @@ const AudioState = (wsMusic) => {
         }
       }
     }
-  }, [audioPlaying]);
+  }, [audioIndex, wsMusic, audioPlaying]);
 
   return [audioPlaying, audioToggle];
 };
