@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "../BoxStyle.css";
 import "./MainWorkspace.css";
 
@@ -49,8 +47,8 @@ const MainWorkspace = ({ music, musicSetter }) => {
                       {...provided.dragHandleProps}
                     >
                       <button
+                        className="x-button"
                         onClick={(event) => handleDelete(event, i, index)}
-                        style={{ height: "10px", width: "10px" }}
                       >
                         X
                       </button>{" "}
