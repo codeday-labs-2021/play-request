@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "../BoxStyle.css";
 import "./MainWorkspace.css";
 
@@ -11,8 +13,15 @@ const getListStyle = (isDraggingOver) => ({
   display: "flex",
 });
 
-const MainWorkspace = ({ music }) => {
+const MainWorkspace = ({ music, musicSetter }) => {
   let rows = [];
+
+  const handleDelete = (event, row, index) => {
+    let musicClone = Array.from(music);
+    musicClone[row].splice(index, 1);
+    musicSetter(musicClone);
+  };
+
   for (let i = 0; i < 4; i++) {
     rows.push(
       <Droppable
@@ -25,6 +34,7 @@ const MainWorkspace = ({ music }) => {
             ref={provided.innerRef}
             style={getListStyle(snapshot.isDraggingOver)}
           >
+            {/* {console.log(musicFiles)} */}
             {music[i].length !== 0 &&
               music[i].map(({ id, file, name, type }, index) => (
                 <Draggable
@@ -39,6 +49,12 @@ const MainWorkspace = ({ music }) => {
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
+                      <button
+                        onClick={(event) => handleDelete(event, i, index)}
+                        style={{ height: "10px", width: "10px" }}
+                      >
+                        X
+                      </button>{" "}
                       <div className="type-display">{type}</div>
                       <div className="track-data">{name}</div>
                     </div>
@@ -54,5 +70,15 @@ const MainWorkspace = ({ music }) => {
 
   return <div className="timeline">{rows}</div>;
 };
+
+function nthIndex(str, pat, n) {
+  var L = str.length,
+    i = -1;
+  while (n-- && i++ < L) {
+    i = str.indexOf(pat, i);
+    if (i < 0) break;
+  }
+  return i;
+}
 
 export default MainWorkspace;

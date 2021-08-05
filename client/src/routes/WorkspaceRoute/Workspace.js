@@ -175,7 +175,7 @@ function Workspace() {
             </div>
           </div>
           <div className="wrapper__column">
-            <MainWorkspace music={wsMusic} />
+            <MainWorkspace music={wsMusic} musicSetter={setWSMusic} />
           </div>
           <div className="wrapper__column">
             <div className="column__samples">
