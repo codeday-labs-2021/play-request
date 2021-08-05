@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import Chatroom from "../../components/WorkspacePanels/ChatroomPanel/Chatroom";
 import {
   Effects,
   loadedProjectEffects,
@@ -47,6 +46,7 @@ const copy = (
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
   const item = sourceClone[droppableSource.index];
+  item["audio"] = new Audio(item["file"]);
 
   destClone[timelineRow].splice(droppableDestination.index, 0, item);
   return destClone;
@@ -66,9 +66,60 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   return result;
 };
 
+const AudioState = (wsMusic) => {
+  let playAudioIndex = [0, 0, 0, 0];
+  const [audioIndex, setAudioIndex] = useState(playAudioIndex);
+  const [audioPlaying, setAudioPlaying] = useState(false);
+
+  const audioToggle = () => {
+    if (audioPlaying) {
+      setAudioPlaying(false);
+      for (let i = 0; i < wsMusic.length; i++) {
+        if (wsMusic[i][audioIndex[i]] != null) {
+          wsMusic[i][audioIndex[i]]["audio"].pause();
+        }
+      }
+    } else {
+      setAudioPlaying(true);
+      // for (let i = 0; i < wsMusic.length; i++) {
+      //   if (wsMusic[i][audioIndex[i]] != null) {
+      //     wsMusic[i][audioIndex[i]]["audio"].play();
+      //   }
+      // }
+    }
+  };
+
+  useEffect(() => {
+    if (audioPlaying) {
+      for (let i = 0; i < wsMusic.length; i++) {
+        for (let j = 0; j < wsMusic[i].length; j++) {
+          const endedListener = () => {
+            wsMusic[i][j + 1]["audio"].play();
+            let indexClone = Array.from(audioIndex);
+            indexClone[i] = j + 1;
+            setAudioIndex(indexClone);
+            wsMusic[i][j]["audio"].removeEventListener("ended", endedListener);
+          };
+          if (wsMusic[i][j + 1] != null) {
+            wsMusic[i][j]["audio"].addEventListener("ended", endedListener);
+          }
+        }
+      }
+      for (let x = 0; x < wsMusic.length; x++) {
+        if (wsMusic[x][0] != null) {
+          wsMusic[x][0]["audio"].play();
+        }
+      }
+    }
+  }, [audioIndex, wsMusic, audioPlaying]);
+
+  return [audioPlaying, audioToggle];
+};
+
 // component
 function Workspace() {
   const [wsMusic, setWSMusic] = useState(workspaceMusic);
+  const [audioPlaying, audioToggle] = AudioState(wsMusic);
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -170,12 +221,10 @@ function Workspace() {
       <div className="main-wrapper__wrapper">
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="wrapper__column">
-            <div className="column__chatroom">
-              <Chatroom />
-            </div>
-          </div>
-          <div className="wrapper__column">
             <MainWorkspace music={wsMusic} />
+            <button onClick={audioToggle}>
+              {audioPlaying ? "Pause" : "Play"}
+            </button>
           </div>
           <div className="wrapper__column">
             <div className="column__samples">
