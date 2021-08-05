@@ -221,7 +221,7 @@ function Workspace() {
       <div className="main-wrapper__wrapper">
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="wrapper__column">
-            <MainWorkspace music={wsMusic} />
+            <MainWorkspace music={wsMusic} musicSetter={setWSMusic} />
             <button onClick={audioToggle}>
               {audioPlaying ? "Pause" : "Play"}
             </button>

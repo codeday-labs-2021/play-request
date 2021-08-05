@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 const getContainerStyle = (draggableStyle, stateWidth) => ({
   ...draggableStyle,
@@ -7,8 +9,14 @@ const getContainerStyle = (draggableStyle, stateWidth) => ({
 });
 
 const TrackObject = (props) => {
-  const { musicProps, index, row } = props;
+  const { musicProps, musicSetter, music, index, row } = props;
   const [width, setWidth] = useState(100);
+
+  const handleDelete = (event, row, index) => {
+    let musicClone = Array.from(music);
+    musicClone[row].splice(index, 1);
+    musicSetter(musicClone);
+  };
 
   const setAudioDuration = () => {
     if (musicProps.audio.duration <= 3) {
@@ -34,7 +42,6 @@ const TrackObject = (props) => {
     <Draggable
       draggableId={"trackobjectdrag-" + row + "-" + musicProps.id}
       index={index}
-      // key={"trackobject-" + musicProps.id}
     >
       {(provided) => (
         <div
@@ -44,7 +51,14 @@ const TrackObject = (props) => {
           {...provided.dragHandleProps}
           style={getContainerStyle(provided.draggableProps.style, width)}
         >
-          <div className="type-display">{musicProps.type}</div>
+          <div className="type-display">
+            {musicProps.type}
+            <FontAwesomeIcon
+              className="trash-icon"
+              onClick={(event) => handleDelete(event, row, index)}
+              icon={faTrashAlt}
+            />
+          </div>
           <div className="track-data">
             <audio id={"music-" + musicProps.id} src={musicProps.file}></audio>
             {musicProps.name}
