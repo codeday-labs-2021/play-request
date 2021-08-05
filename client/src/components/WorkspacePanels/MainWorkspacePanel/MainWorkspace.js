@@ -34,7 +34,6 @@ const MainWorkspace = ({ music, musicSetter }) => {
             ref={provided.innerRef}
             style={getListStyle(snapshot.isDraggingOver)}
           >
-            {/* {console.log(musicFiles)} */}
             {music[i].length !== 0 &&
               music[i].map(({ id, file, name, type }, index) => (
                 <Draggable
@@ -70,15 +69,5 @@ const MainWorkspace = ({ music, musicSetter }) => {
 
   return <div className="timeline">{rows}</div>;
 };
-
-function nthIndex(str, pat, n) {
-  var L = str.length,
-    i = -1;
-  while (n-- && i++ < L) {
-    i = str.indexOf(pat, i);
-    if (i < 0) break;
-  }
-  return i;
-}
 
 export default MainWorkspace;
