@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import {
   Effects,
@@ -72,10 +72,16 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 
 // create audio state to handle music composition
 const AudioState = (wsMusic) => {
+  const useForceUpdate = () => {
+    const [, setState] = useState();
+    return () => setState({});
+  };
+
   // list of current indexes that refer to music that is current playing in each row
   const audioIndex = useRef([-1, -1, -1, -1]);
   // universal state to set the composition to playing or not playing
   const [audioPlaying, setAudioPlaying] = useState(false);
+  const forceUpdate = useForceUpdate();
 
   // play the audio
   const playAudio = () => {
@@ -90,6 +96,7 @@ const AudioState = (wsMusic) => {
           // set the following piece of music to play after this one ends in the row
           const endedListener = () => {
             audioIndex.current[i] = j + 1;
+            forceUpdate();
             wsMusic[i][j + 1]["audio"].play();
 
             wsMusic[i][j]["audio"].currentTime = 0;
@@ -99,6 +106,7 @@ const AudioState = (wsMusic) => {
           // reset the current index once all the music in the row ends
           const resetListener = () => {
             audioIndex.current[i] = -1;
+            forceUpdate();
             // if, once reset, all values are -1, the composition has ended and audio flag can be disabled
             if (
               audioIndex.current.every((currentValue) => currentValue === -1)
@@ -123,6 +131,7 @@ const AudioState = (wsMusic) => {
         for (let x = 0; x < wsMusic.length; x++) {
           if (wsMusic[x][0] != null) {
             audioIndex.current[x] = 0;
+            forceUpdate();
             wsMusic[x][0]["audio"].play();
           }
         }
@@ -132,6 +141,7 @@ const AudioState = (wsMusic) => {
           // the piece that should have been started is missing, which means objects were rearranged. Reset this track to -1.
           if (wsMusic[x][audioIndex.current[x]] == null) {
             audioIndex.current[x] = -1;
+            forceUpdate();
             // restart the music normally
           } else {
             wsMusic[x][audioIndex.current[x]]["audio"].play();
@@ -165,22 +175,26 @@ const AudioState = (wsMusic) => {
         // if the object is not null
         if (wsMusic[i][j] != null) {
           // reset the music to default, pause it
-          wsMusic[i][j]["audio"].pause();
-          wsMusic[i][j]["audio"].currentTime = 0;
+          let audio = wsMusic[i][j]["audio"];
+          audio.pause();
+          audio.currentTime = 0;
+          let newAudio = audio.cloneNode(true);
+          wsMusic[i][j]["audio"] = newAudio;
         }
       }
       // reset current index of row to -1
       audioIndex.current[i] = -1;
+      forceUpdate();
     }
   };
 
-  return [audioPlaying, playAudio, pauseAudio, stopAudio];
+  return [audioIndex, playAudio, pauseAudio, stopAudio];
 };
 
 // component
 function Workspace() {
   const [wsMusic, setWSMusic] = useState(workspaceMusic);
-  const [audioPlaying, playAudio, pauseAudio, stopAudio] = AudioState(wsMusic);
+  const [audioIndex, playAudio, pauseAudio, stopAudio] = AudioState(wsMusic);
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -195,6 +209,7 @@ function Workspace() {
         source.droppableId.includes("effect")) &&
       destination.droppableId.includes("timeline-drop")
     ) {
+      stopAudio();
       // gets timeline row index
       let timelineRow =
         parseInt(destination.droppableId.split(/[- ]+/).pop()) - 1;
@@ -227,6 +242,8 @@ function Workspace() {
       source.droppableId.includes("timeline-drop") &&
       source.droppableId === destination.droppableId
     ) {
+      stopAudio();
+
       let timelineRow =
         parseInt(destination.droppableId.split(/[- ]+/).pop()) - 1;
       workspaceMusic[timelineRow] = reorder(
@@ -241,6 +258,8 @@ function Workspace() {
       source.droppableId.includes("timeline-drop") &&
       destination.droppableId.includes("timeline-drop")
     ) {
+      stopAudio();
+
       let sourceTimelineRow =
         parseInt(source.droppableId.split(/[- ]+/).pop()) - 1;
 
@@ -283,16 +302,16 @@ function Workspace() {
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="wrapper__column">
             <Titlebar />
-            <MainWorkspace music={wsMusic} musicSetter={setWSMusic} />
+            <MainWorkspace
+              music={wsMusic}
+              musicSetter={setWSMusic}
+              audioIndex={audioIndex}
+            />
             <Toolbar
-              audioPlaying={audioPlaying}
               playAudio={playAudio}
               pauseAudio={pauseAudio}
               stopAudio={stopAudio}
             />
-            {/* <button onClick={audioToggle}>
-              {audioPlaying ? "Pause" : "Play"}
-            </button> */}
           </div>
           <div className="wrapper__column">
             <div className="column__samples">

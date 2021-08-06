@@ -3,14 +3,18 @@ import { Draggable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
-const getContainerStyle = (draggableStyle, stateWidth) => ({
-  ...draggableStyle,
-  width: stateWidth,
-});
-
 const TrackObject = (props) => {
-  const { musicProps, musicSetter, music, index, row } = props;
+  const { musicProps, musicSetter, audioIndex, music, index, row } = props;
   const [width, setWidth] = useState(100);
+
+  const getContainerStyle = (draggableStyle) => ({
+    ...draggableStyle,
+    width: width,
+    border:
+      audioIndex.current[row] === index
+        ? "4px solid #9DF980"
+        : "4px solid #082d4b",
+  });
 
   const handleDelete = (event, row, index) => {
     let musicClone = Array.from(music);
@@ -49,7 +53,7 @@ const TrackObject = (props) => {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          style={getContainerStyle(provided.draggableProps.style, width)}
+          style={getContainerStyle(provided.draggableProps.style)}
         >
           <div className="type-display">
             {musicProps.type}

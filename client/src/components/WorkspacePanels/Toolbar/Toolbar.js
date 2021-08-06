@@ -13,37 +13,25 @@ import {
 const Toolbar = (props) => {
   const { playAudio, pauseAudio, stopAudio } = props;
 
-  const handlePlay = () => {
-    playAudio();
-  };
-
-  const handlePause = () => {
-    pauseAudio();
-  };
-
-  const handleStop = () => {
-    stopAudio();
-  };
-
   return (
     <>
       <div className="toolbar-wrapper">
         <div className="controls-wrapper">
           <FontAwesomeIcon className="control-icon" icon={faStepBackward} />
           <FontAwesomeIcon
-            onClick={handlePlay}
+            onClick={playAudio}
             className="control-icon"
             icon={faPlay}
             size="2x"
           />
           <FontAwesomeIcon
-            onClick={handlePause}
+            onClick={pauseAudio}
             className="control-icon"
             icon={faPause}
             size="2x"
           />
           <FontAwesomeIcon
-            onClick={handleStop}
+            onClick={stopAudio}
             className="control-icon"
             icon={faStop}
             size="2x"

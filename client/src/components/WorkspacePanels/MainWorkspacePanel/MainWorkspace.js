@@ -12,7 +12,7 @@ const getListStyle = (isDraggingOver) => ({
   display: "flex",
 });
 
-const MainWorkspace = ({ music, musicSetter }) => {
+const MainWorkspace = ({ music, musicSetter, audioIndex }) => {
   let rows = [];
 
   for (let i = 0; i < 4; i++) {
@@ -34,6 +34,7 @@ const MainWorkspace = ({ music, musicSetter }) => {
                   musicProps={props}
                   index={index}
                   row={i}
+                  audioIndex={audioIndex}
                   musicSetter={musicSetter}
                   music={music}
                   key={"trackobj-" + i + "-" + props.id}
