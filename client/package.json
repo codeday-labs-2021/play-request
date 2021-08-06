@@ -1,6 +1,5 @@
 {
   "name": "play-request",
-  "homepage": "https://codeday-labs.github.io/play-request",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
