@@ -1,20 +1,8 @@
+![Screenshot from 2021-08-05 21-13-15](https://user-images.githubusercontent.com/36248672/128454990-6111bf75-412a-4269-9400-07ac429be807.png)
+
 # Press Play
 
-## User Requirements
-
-- A user can log in
-- A user can join a room or group
-- A user can propose an edit to a track in a group
-- A user can view proposed edits to the track in a group and approve/deny them
-- A user can comment on a proposed edit to the track in a group
-- A user can select from multiple samples
-- A user can add samples to their room/group and account
-- A user can chat with their teammates in their group
-
-## Roadmap
-
-Think in terms of building up from scratch. What comes first? Which elements
-of the project depend on others?
+*Sequential Music Making*
 
 ## Prerequisites
 
@@ -50,10 +38,3 @@ If you see a nodemon error in the console, run `$ npm i nodemon`.
 
 2. Go to http://localhost:4000/
 
-### Firebase
-
-To access the Firebase database and storage bucket, go to `https://console.firebase.google.com/`
-
-This project uses the Realtime database to store project data in a JSON-like format. The tab for this is called "Realtime Database" on the left. Data can be inputted manually here or through the [API](https://firebase.google.com/docs/database).
-
-To store and monitor sound files, navigate to the tab called "Storage". Files can either be uploaded here or through the [API](https://firebase.google.com/docs/storage).
