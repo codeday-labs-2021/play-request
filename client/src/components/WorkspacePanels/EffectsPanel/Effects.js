@@ -56,8 +56,8 @@ function Effects() {
 
   useEffect(() => {
     setAppState({ loading: true });
-    const projectApiUrl = `http://localhost:4000/project/607eb708-61a6-4cae-aca2-3f789a53dbdf/effects/`;
-    const universalApiUrl = `http://localhost:4000/effects/`;
+    const projectApiUrl = `https://play-request-service.herokuapp.com/project/607eb708-61a6-4cae-aca2-3f789a53dbdf/effects/`;
+    const universalApiUrl = `https://play-request-service.herokuapp.com/effects/`;
     const getEffects = async () => {
       let data = await axios.all([
         axios.get(universalApiUrl),

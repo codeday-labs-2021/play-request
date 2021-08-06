@@ -56,8 +56,8 @@ function Samples() {
 
   useEffect(() => {
     setAppState({ loading: true });
-    const projectApiUrl = `http://localhost:4000/project/607eb708-61a6-4cae-aca2-3f789a53dbdf/samples/`;
-    const universalApiUrl = `http://localhost:4000/samples/`;
+    const projectApiUrl = `https://play-request-service.herokuapp.com/project/607eb708-61a6-4cae-aca2-3f789a53dbdf/samples/`;
+    const universalApiUrl = `https://play-request-service.herokuapp.com/samples/`;
     const getSamples = async () => {
       let data = await axios.all([
         axios.get(universalApiUrl),
