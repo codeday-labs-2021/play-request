@@ -1,10 +1,11 @@
 @import "../../reset.css";
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;800&display=swap");
 
 html,
 body {
   height: 100%;
   width: 100%;
-  font-family: Lato, Arial, sans-serif;
+  font-family: "Rubik", sans-serif;
 }
 
 .main-wrapper {
@@ -36,6 +37,10 @@ body {
 .wrapper__column:first-child {
   width: 80%;
   border-right: none;
+}
+
+.column__samples {
+  border-bottom: 4px solid #02feff;
 }
 
 .wrapper__column .column__samples,
