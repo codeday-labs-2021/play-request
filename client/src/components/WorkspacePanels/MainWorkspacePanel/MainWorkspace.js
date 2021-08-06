@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
+import React from "react";
+import { Droppable } from "react-beautiful-dnd";
 import "../BoxStyle.css";
 import "./MainWorkspace.css";
 import TrackObject from "./TrackObject";
@@ -12,7 +12,7 @@ const getListStyle = (isDraggingOver) => ({
   display: "flex",
 });
 
-const MainWorkspace = ({ music, musicSetter }) => {
+const MainWorkspace = ({ music, musicSetter, audioIndex }) => {
   let rows = [];
 
   for (let i = 0; i < 4; i++) {
@@ -34,6 +34,7 @@ const MainWorkspace = ({ music, musicSetter }) => {
                   musicProps={props}
                   index={index}
                   row={i}
+                  audioIndex={audioIndex}
                   musicSetter={musicSetter}
                   music={music}
                   key={"trackobj-" + i + "-" + props.id}
@@ -46,7 +47,11 @@ const MainWorkspace = ({ music, musicSetter }) => {
     );
   }
 
-  return <div className="timeline">{rows}</div>;
+  return (
+    <div className="timeline-wrapper">
+      <div className="timeline">{rows}</div>
+    </div>
+  );
 };
 
 export default MainWorkspace;
