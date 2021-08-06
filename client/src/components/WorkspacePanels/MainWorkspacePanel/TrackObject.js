@@ -20,7 +20,7 @@ const TrackObject = (props) => {
 
   const setAudioDuration = () => {
     if (musicProps.audio.duration <= 3) {
-      setWidth(80);
+      setWidth(90);
     } else if (musicProps.audio.duration >= 100) {
       setWidth(2 * musicProps.audio.duration);
     } else {

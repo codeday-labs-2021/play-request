@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
+import React from "react";
+import { Droppable } from "react-beautiful-dnd";
 import "../BoxStyle.css";
 import "./MainWorkspace.css";
 import TrackObject from "./TrackObject";

@@ -40,15 +40,6 @@
   border-radius: 10px;
   border: 4px solid #082d4b;
   margin: 5px;
-  -webkit-user-select: none; /* Chrome/Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE10+ */
-
-  /* The rule below is not implemented in browsers yet */
-  -o-user-select: none;
-
-  /* The rule below is implemented in most browsers by now */
-  user-select: none;
 }
 
 .track-data {

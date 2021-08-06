@@ -1,11 +1,56 @@
 import React from "react";
 import "./Toolbar.css";
 import projectIcon from "./play_icon.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlay,
+  faPause,
+  faStop,
+  faStepForward,
+  faStepBackward,
+} from "@fortawesome/free-solid-svg-icons";
 
-const Toolbar = () => {
+const Toolbar = (props) => {
+  const { playAudio, pauseAudio, stopAudio } = props;
+
+  const handlePlay = () => {
+    playAudio();
+  };
+
+  const handlePause = () => {
+    pauseAudio();
+  };
+
+  const handleStop = () => {
+    stopAudio();
+  };
+
   return (
     <>
-      <div className="toolbar-wrapper"></div>
+      <div className="toolbar-wrapper">
+        <div className="controls-wrapper">
+          <FontAwesomeIcon className="control-icon" icon={faStepBackward} />
+          <FontAwesomeIcon
+            onClick={handlePlay}
+            className="control-icon"
+            icon={faPlay}
+            size="2x"
+          />
+          <FontAwesomeIcon
+            onClick={handlePause}
+            className="control-icon"
+            icon={faPause}
+            size="2x"
+          />
+          <FontAwesomeIcon
+            onClick={handleStop}
+            className="control-icon"
+            icon={faStop}
+            size="2x"
+          />
+          <FontAwesomeIcon className="control-icon" icon={faStepForward} />
+        </div>
+      </div>
     </>
   );
 };

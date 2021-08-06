@@ -5,6 +5,46 @@
   height: 20%;
   background-color: #292929;
   border-top: 2px solid #02feff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.controls-wrapper {
+  width: 80%;
+  height: 20%;
+  margin-top: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.control-icon:hover {
+  color: #bff1f1;
+  transform: translate3d(0, -2px, 0);
+  box-shadow: 0 4px 17px rgba(0, 0, 0, 0.2);
+}
+
+.control-icon:active {
+  box-shadow: 0 1px 1px 0 rgba(78, 74, 74, 0.1);
+  transform: translate3d(0, 1px, 0);
+}
+
+.controls-wrapper > * {
+  margin: 10px;
+}
+
+.controls-wrapper > *:first-child {
+  margin-right: 30px !important;
+}
+
+.controls-wrapper > *:last-child {
+  margin-left: 30px !important;
+}
+
+.play-button {
+  height: 30px;
 }
 
 .titlebar-wrapper {
