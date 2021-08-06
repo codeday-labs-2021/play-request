@@ -1,21 +1,14 @@
 {
   "name": "play-request",
   "version": "1.0.0",
-  "description": "## User Requirements",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node service/index.js"
+    "dev": "nodemon --exec babel-node src/index.js",
+    "clean": "rm -rf build && mkdir build",
+    "build-babel": "babel -d ./build ./src -s",
+    "build": "npm run clean && npm run build-babel",
+    "start": "npm run build && node ./build/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/codeday-labs/play-request.git"
-  },
-  "author": "Nayeon Shin",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/codeday-labs/play-request/issues"
-  },
-  "homepage": "https://github.com/codeday-labs/play-request#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
