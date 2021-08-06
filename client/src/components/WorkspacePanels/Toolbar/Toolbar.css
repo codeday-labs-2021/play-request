@@ -1,0 +1,14 @@
+.toolbar-wrapper {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  height: 20%;
+  background-color: #292929;
+  border-top: 2px solid #02feff;
+}
+
+.titlebar-wrapper {
+  height: 5%;
+  width: 100%;
+  background-color: #292929;
+}

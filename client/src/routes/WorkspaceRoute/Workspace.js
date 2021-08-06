@@ -11,6 +11,10 @@ import {
   loadedUniversalSamples,
 } from "../../components/WorkspacePanels/SamplesPanel/Samples";
 import MainWorkspace from "../../components/WorkspacePanels/MainWorkspacePanel/MainWorkspace";
+import {
+  Titlebar,
+  Toolbar,
+} from "../../components/WorkspacePanels/Toolbar/Toolbar";
 
 import "./Workspace.css";
 
@@ -221,10 +225,12 @@ function Workspace() {
       <div className="main-wrapper__wrapper">
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="wrapper__column">
+            <Titlebar />
             <MainWorkspace music={wsMusic} musicSetter={setWSMusic} />
-            <button onClick={audioToggle}>
+            <Toolbar />
+            {/* <button onClick={audioToggle}>
               {audioPlaying ? "Pause" : "Play"}
-            </button>
+            </button> */}
           </div>
           <div className="wrapper__column">
             <div className="column__samples">

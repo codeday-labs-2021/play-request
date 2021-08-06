@@ -46,7 +46,11 @@ const MainWorkspace = ({ music, musicSetter }) => {
     );
   }
 
-  return <div className="timeline">{rows}</div>;
+  return (
+    <div className="timeline-wrapper">
+      <div className="timeline">{rows}</div>
+    </div>
+  );
 };
 
 export default MainWorkspace;
