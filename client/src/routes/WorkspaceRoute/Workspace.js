@@ -83,6 +83,37 @@ const AudioState = (wsMusic) => {
   const [audioPlaying, setAudioPlaying] = useState(false);
   const forceUpdate = useForceUpdate();
 
+  const skipForward = () => {
+    for (let i = 0; i < wsMusic.length; i++) {
+      if (
+        audioIndex.current[i] != -1 &&
+        wsMusic[i][audioIndex.current[i] + 1] != null
+      ) {
+        wsMusic[i][audioIndex.current[i]]["audio"].pause();
+        wsMusic[i][audioIndex.current[i]]["audio"].currentTime = 0;
+        audioIndex.current[i] += 1;
+        forceUpdate();
+        wsMusic[i][audioIndex.current[i]]["audio"].play();
+      }
+    }
+  };
+
+  const skipBackward = () => {
+    for (let i = 0; i < wsMusic.length; i++) {
+      if (audioIndex.current[i] != -1) {
+        if (wsMusic[i][audioIndex.current[i] - 1] != null) {
+          wsMusic[i][audioIndex.current[i]]["audio"].pause();
+          wsMusic[i][audioIndex.current[i]]["audio"].currentTime = 0;
+          audioIndex.current[i] -= 1;
+          forceUpdate();
+          wsMusic[i][audioIndex.current[i]]["audio"].play();
+        } else {
+          wsMusic[i][audioIndex.current[i]]["audio"].currentTime = 0;
+        }
+      }
+    }
+  };
+
   // play the audio
   const playAudio = () => {
     // only run if the audio isn't playing
@@ -107,7 +138,7 @@ const AudioState = (wsMusic) => {
           const resetListener = () => {
             audioIndex.current[i] = -1;
             forceUpdate();
-            // if, once reset, all values are -1, the composition has ended and audio flag can be disabled
+            // if, once reset, all values are -1, the composition has ended and audio playing flag can be disabled
             if (
               audioIndex.current.every((currentValue) => currentValue === -1)
             ) {
@@ -188,13 +219,27 @@ const AudioState = (wsMusic) => {
     }
   };
 
-  return [audioIndex, playAudio, pauseAudio, stopAudio];
+  return [
+    audioIndex,
+    playAudio,
+    pauseAudio,
+    stopAudio,
+    skipForward,
+    skipBackward,
+  ];
 };
 
 // component
 function Workspace() {
   const [wsMusic, setWSMusic] = useState(workspaceMusic);
-  const [audioIndex, playAudio, pauseAudio, stopAudio] = AudioState(wsMusic);
+  const [
+    audioIndex,
+    playAudio,
+    pauseAudio,
+    stopAudio,
+    skipForward,
+    skipBackward,
+  ] = AudioState(wsMusic);
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -311,6 +356,8 @@ function Workspace() {
               playAudio={playAudio}
               pauseAudio={pauseAudio}
               stopAudio={stopAudio}
+              skipForward={skipForward}
+              skipBackward={skipBackward}
             />
           </div>
           <div className="wrapper__column">

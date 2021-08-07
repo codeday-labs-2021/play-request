@@ -11,13 +11,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const Toolbar = (props) => {
-  const { playAudio, pauseAudio, stopAudio } = props;
+  const { playAudio, pauseAudio, stopAudio, skipForward, skipBackward } = props;
 
   return (
     <>
       <div className="toolbar-wrapper">
         <div className="controls-wrapper">
-          <FontAwesomeIcon className="control-icon" icon={faStepBackward} />
+          <FontAwesomeIcon
+            onClick={skipBackward}
+            className="control-icon"
+            icon={faStepBackward}
+          />
           <FontAwesomeIcon
             onClick={playAudio}
             className="control-icon"
@@ -36,7 +40,11 @@ const Toolbar = (props) => {
             icon={faStop}
             size="2x"
           />
-          <FontAwesomeIcon className="control-icon" icon={faStepForward} />
+          <FontAwesomeIcon
+            onClick={skipForward}
+            className="control-icon"
+            icon={faStepForward}
+          />
         </div>
       </div>
     </>
