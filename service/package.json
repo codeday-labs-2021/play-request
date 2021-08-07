@@ -4,7 +4,7 @@
   "description": "## User Requirements",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node service/server.js"
+    "dev": "nodemon --exec babel-node src/index.js"
   },
   "repository": {
     "type": "git",
